@@ -19,9 +19,9 @@ public class GenerateTemplateAppServices : IGenerateTemplateAppServices
         _generateTemplateService = generateTemplateService;
     }
 
-    public async Task<string> GetAsync()
+    public string GetAsync()
     {
-        var result = await _generateTemplateService.GetAsync();
+        var result = _generateTemplateService.GetAsync();
 
         return result;
     }

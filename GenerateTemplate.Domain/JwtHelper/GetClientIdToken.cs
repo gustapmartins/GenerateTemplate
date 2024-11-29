@@ -26,6 +26,6 @@ public class GetClientIdToken : IGetClientIdToken
             }
         }
 
-        return null;
+        return string.Empty;
     }
 }
