@@ -16,29 +16,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-<<<<<<< HEAD
       - name: Run StyleCop
         run: dotnet build -warnaserror
 
-=======
->>>>>>> 3ff2ec70ad2731f60163aa4840d58cadde451680
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '3.1.x'
           
-<<<<<<< HEAD
       - run: dotnet restore GenerateTemplate.sln
 
       - run: dotnet build GenerateTemplate.sln -c Release -o ./app/build
 
       - run: dotnet test GenerateTemplate.sln --p:CollectCoverage=true --collect:"Xplat Code Coverage" --results-directory ./TestResults
-=======
-      - run: dotnet restore VarzeaLeague.sln
-
-      - run: dotnet build VarzeaLeague.sln -c Release -o ./app/build
-
-      - run: dotnet test VarzeaLeague.sln --p:CollectCoverage=true --collect:"Xplat Code Coverage" --results-directory ./TestResults
->>>>>>> 3ff2ec70ad2731f60163aa4840d58cadde451680
 
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
@@ -51,27 +40,16 @@ jobs:
           hide_complexity: true
           indicators: true
           output: both
-<<<<<<< HEAD
           thresholds: '10 20'
 
       - name: StyleCop Analysis
         run: dotnet build GenerateTemplate.sln --no-incremental -p:GenerateDocumentationFile=true 
-=======
-          thresholds: '60 80'
-
-      - name: StyleCop Analysis
-        run: dotnet build VarzeaLeague.sln --no-incremental -p:GenerateDocumentationFile=true 
->>>>>>> 3ff2ec70ad2731f60163aa4840d58cadde451680
 
   Build:
     runs-on: ubuntu-latest
     needs: Test
     steps:
-<<<<<<< HEAD
       - name: Build the project
-=======
-      - name: Checkout Repository
->>>>>>> 3ff2ec70ad2731f60163aa4840d58cadde451680
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
@@ -86,20 +64,12 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Build Docker Image
-<<<<<<< HEAD
         run: docker build --tag GenerateTemplate/application:latest -f GenerateTemplate.Application/Dockerfile .
-=======
-        run: docker build --tag varzeateam/application:latest -f VarzeaTeam.Application/Dockerfile .
->>>>>>> 3ff2ec70ad2731f60163aa4840d58cadde451680
         env:
           DOCKER_BUILDKIT: 1
 
       - name: Clean Up Docker Images
-<<<<<<< HEAD
         run: docker rmi GenerateTemplate/application:latest
-=======
-        run: docker rmi varzeateam/application:latest
->>>>>>> 3ff2ec70ad2731f60163aa4840d58cadde451680
 
   Validator:
     runs-on: ubuntu-latest
@@ -113,17 +83,10 @@ jobs:
           dotnet-version: '3.1.x'
 
       - name: Restore Dependencies
-<<<<<<< HEAD
         run: dotnet restore GenerateTemplate.Application/GenerateTemplate.Application.csproj
 
       - name: Run Code Analysis
         run: dotnet build GenerateTemplate.Application/GenerateTemplate.Application.csproj /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
-=======
-        run: dotnet restore VarzeaTeam.Application/VarzeaLeague.Application.csproj
-
-      - name: Run Code Analysis
-        run: dotnet build VarzeaTeam.Application/VarzeaLeague.Application.csproj /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
->>>>>>> 3ff2ec70ad2731f60163aa4840d58cadde451680
 
       - name: Upload Validator Results
         if: always()
