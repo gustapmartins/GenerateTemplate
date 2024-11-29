@@ -91,7 +91,7 @@ jobs:
 
       - name: Upload Validator Results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: validator-results
           path: bin/Debug/validator-results
