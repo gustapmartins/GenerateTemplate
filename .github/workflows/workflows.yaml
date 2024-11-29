@@ -17,7 +17,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run StyleCop
-        run: dotnet build -warnaserror
+        run: dotnet build GenerateTemplate.sln -warnaserror
+
 
       - uses: actions/setup-dotnet@v4
         with:
