@@ -161,7 +161,7 @@ public class AUTHCONTROLLER : ControllerBase
     [HttpPost("reset-password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> ResetPassword([FromBody] PasswordResetDto passwordResetDto)
+    public async Task<ActionResult> ResetPasswordAsync([FromBody] PasswordResetDto passwordResetDto)
     {
         var result = await _authAppService.ResetPasswordAsync(passwordResetDto);
 
@@ -181,7 +181,7 @@ public class AUTHCONTROLLER : ControllerBase
     [HttpPost("forget-password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> ForgetPassword([FromHeader] string email)
+    public async Task<ActionResult> ForgetPasswordAsync([FromHeader] string email)
     {
         var code = await _authAppService.ForgetPasswordAsync(email);
 
