@@ -21,7 +21,7 @@ jobs:
 
         # Verifica o conteúdo do diretório scripts para garantir que o arquivo está lá
       - name: List Files in Scripts Directory
-        run: ls -la 
+        run: ls -la .github
 
       - name: Run Async Method Validation
         run: pwsh -File ./GenerateTemplate/.github/scripts/validate-async.ps1
