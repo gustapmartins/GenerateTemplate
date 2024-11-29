@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework Condition=" '$(TargetFramework)' == '' ">net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.18.1" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenerateTemplate.Application\GenerateTemplate.Application.csproj" />
+    <ProjectReference Include="..\GenerateTemplate.CrossCutting\GenerateTemplate.Infra.CrossCutting.csproj" />
+    <ProjectReference Include="..\GenerateTemplate.Data\GenerateTemplate.Infra.Data.csproj" />
+    <ProjectReference Include="..\GenerateTemplate.Domain\GenerateTemplate.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

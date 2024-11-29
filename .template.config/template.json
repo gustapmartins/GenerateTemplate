@@ -1,0 +1,111 @@
+{
+    "$schema": "https://json.schemastore.org/template",
+    "author": "Gustavo Martins",
+    "classifications": [
+        "Web",
+        "MVC"
+    ],
+    "identity": "GenerateTemplate",
+    "name": "My custom template",
+    "shortName": "generateTemplate",
+    "sourceName": "GenerateTemplate",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "preferNameDirectory": true,
+    "symbols": {
+        "Framework": {
+            "type": "parameter",
+            "description": "The target framework for the project",
+            "datatype": "choice",
+            "choices": [
+                {
+                    "choice": "net8.0"
+                },
+                {
+                    "choice": "net7.0"
+                },
+                {
+                    "choice": "net6.0"
+                }
+            ],
+            "defaultValue": "net8.0",
+            "replaces": "{TargetFramework}"
+        },
+        "EnableSwaggerSupport": {
+            "type": "parameter",
+            "description": "Enables swagger support",
+            "datatype": "bool",
+            "defaultValue": "true"
+        },
+        "AppSettingsDev": {
+            "type": "parameter",
+            "description": "Adds appsettings.Development.json",
+            "datatype": "bool",
+            "defaultValue": "true"
+        },
+        "DockerCompose": {
+            "type": "parameter",
+            "description": "Adds docker-compose.yml",
+            "datatype": "bool",
+            "defaultValue": "true"
+        },
+        "Authentication": {
+            "type": "parameter",
+            "description": "Include authentication-related files",
+            "datatype": "bool",
+            "defaultValue": "false"
+        }
+    },
+    "sources": [
+        {
+            
+            "modifiers": [
+                {
+                    "condition": "(!AppSettingsDev)",
+                    "exclude": [
+                        "GenerateTemplate.Application/appsettings.Development.json"
+                    ]
+                },
+                {
+                    "condition": "(!DockerCompose)",
+                    
+                    "exclude": [
+                        "docker-compose.yml",
+                        "docker-compose.override.yml",
+                        "GenerateTemplate.Application/Dockerfile",
+                        "docker-compose.dcproj",
+                        ".dockerignore"
+                    ]
+                },
+                {
+                    "condition": "(!Authentication)",
+                    "exclude": [
+                        "GenerateTemplate.Application/Dto/v1/User/*",
+                        "GenerateTemplate.Application/AppServices/v1/Interface/IAuthAppService.cs",
+                        "GenerateTemplate.Application/AppServices/v1/AuthAppService.cs",
+                        "GenerateTemplate.Application/Controllers/v1/AuthController.cs",
+                        "GenerateTemplate.Application/Mapper/v1/UserMapper.cs",
+
+                        "GenerateTemplate.Domain/Entity/UserEntity/*",
+                        "GenerateTemplate.Domain/Enum/Role.cs",
+                        "GenerateTemplate.Domain/Enum/AccountStatus.cs",
+                        "GenerateTemplate.Domain/Interface/Dao/IAuthDao.cs",
+                        "GenerateTemplate.Domain/Services/v1/AuthService.cs",
+                        "GenerateTemplate.Domain/Interface/Services/v1/IAuthService.cs",
+                        "GenerateTemplate.Domain/JwtHelper/GetClientIdToken.cs",
+
+                        "GenerateTemplate.Infra.CrossCuttings/Configuration/Authentication.cs",
+
+                        "GenerateTemplate.Infra.Data/Repository/EfCore/AuthDaoEfCore.cs",
+
+                        "GenerateTemplate.Application.Test/AppService/v1/AuthAppServiceTest.cs",
+                        "GenerateTemplate.Application.Test/Controller/v1/AuthControllerTest.cs",
+                        "GenerateTemplate.Domain.Test/Services/v1/AuthServiceTest.cs"
+                    ]
+                }
+            ]
+        }
+    ]
+}

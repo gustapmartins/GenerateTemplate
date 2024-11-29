@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  generatetemplate.application:
+    image: ${DOCKER_REGISTRY-}generatetemplateapplication
+    build:
+      context: .
+      dockerfile: GenerateTemplate.Application/Dockerfile
+    container_name: generatetempla_application
+    restart: always
+    depends_on:
+      - mongodb
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Database__ConnectionString=mongodb://mongodb_container:27017 
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "8080:80"
+    networks:
+      - app_network

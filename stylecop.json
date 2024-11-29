@@ -1,0 +1,8 @@
+{
+    "settings": {
+        "namingRules": {
+            "asyncMethodsMustEndWithAsync": true,
+            "nonAsyncMethodsMustNotEndWithAsync": true
+        }
+    }
+}
