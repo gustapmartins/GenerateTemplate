@@ -1,5 +1,5 @@
 # Caminho da pasta onde os arquivos serão verificados
-$directoryPath = "C:/Github/GenerateTemplate"
+$directoryPath = "./"
 
 # Regex para métodos assíncronos sem o sufixo 'Async'
 $regex = [regex]"public\s+async\s+(Task|ValueTask)<?.*?>?\s+(\w+)\s*\("
