@@ -25,7 +25,7 @@ foreach ($file in $files) {
 
             # Verificar se o método não termina com "Async"
             if (-not $methodName.EndsWith("Async")) {
-                Write-Host "Erro: Método '$methodName' não termina com 'Async'."
+                Write-Host "Erro: Método '$methodName' não termina com 'Async'." -ForegroundColor Red
                 $hasErrors = $true
             }
         }
@@ -33,7 +33,7 @@ foreach ($file in $files) {
 }
 
 if ($hasErrors) {
-    Write-Error "Foram encontrados métodos assíncronos que não terminam com 'Async'."
+    Write-Host "Foram encontrados métodos assíncronos que não terminam com 'Async'." -ForegroundColor Yellow
     exit 1
 } else {
     Write-Host "Todos os métodos assíncronos estão corretos!"
