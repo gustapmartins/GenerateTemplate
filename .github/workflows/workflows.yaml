@@ -19,9 +19,17 @@ jobs:
       - name: Install PowerShell
         run: sudo apt-get install -y powershell
 
+        # Verifica o conteúdo do diretório scripts para garantir que o arquivo está lá
+      - name: List Files in Scripts Directory
+        run: ls -la ./scripts
+
+      # Garante que o script tenha permissão de execução
+      - name: Ensure script has execution permission
+        run: chmod +x ./scripts/validate-async.ps1
+
       - name: Run Async Method Validation
         run: pwsh -File ./scripts/validate-async.ps1
-        continue-on-error: false # Se quiser que o workflow falhe caso o script encontre erros
+        continue-on-error: false  # Falha o workflow se erros forem encontrados no script
 
       - name: Run StyleCop
         run: dotnet build GenerateTemplate.sln /p:RunAnalyzersDuringBuild=true
