@@ -24,7 +24,7 @@ jobs:
         run: ls -la .github/scripts
 
       - name: Run Async Method Validation
-        run: pwsh -File ./GenerateTemplate/.github/scripts/validate-async.ps1
+        run: pwsh -File .github/scripts/validate-async.ps1
         continue-on-error: false  # Falha o workflow se erros forem encontrados no script
 
       - name: Run StyleCop
