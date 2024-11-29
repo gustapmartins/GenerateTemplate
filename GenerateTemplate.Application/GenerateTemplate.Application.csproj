@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>ed5b3b1b-c83d-4989-84ab-5e01fa8080de</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<NoWarn>${NoWarn};1591</NoWarn>
@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GenerateTemplate.CrossCutting\GenerateTemplate.Infra.CrossCutting.csproj" />
+    <ProjectReference Include="..\GenerateTemplate.Domain\GenerateTemplate.Domain.csproj" />
   </ItemGroup>
 
 </Project>

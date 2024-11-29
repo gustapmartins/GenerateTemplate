@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   generatetemplate.application:
     image: ${DOCKER_REGISTRY-}generatetemplateapplication
@@ -18,3 +16,16 @@ services:
       - "8080:80"
     networks:
       - app_network
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: mongodb_container
+    ports:
+      - "27017:27017"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\GenerateTemplate.Application\GenerateTemplate.Application.csproj" />
-    <ProjectReference Include="..\..\GenerateTemplate.CrossCutting\GenerateTemplate.Infra.CrossCutting.csproj" />
     <ProjectReference Include="..\..\GenerateTemplate.Data\GenerateTemplate.Infra.Data.csproj" />
     <ProjectReference Include="..\..\GenerateTemplate.Domain\GenerateTemplate.Domain.csproj" />
   </ItemGroup>

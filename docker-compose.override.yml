@@ -1,10 +1,8 @@
-version: '3.4'
-
 services:
   generatetemplate.application:
-     environment:
-       - ASPNETCORE_ENVIRONMENT=Development
-       - ASPNETCORE_URLS=http://+:80;https://+:443
-     ports:
-       - "80:80"
-       - "443:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:443;http://+:80
+    ports:
+      - "80"
+      - "443"
