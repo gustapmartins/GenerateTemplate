@@ -16,7 +16,7 @@ public class GenerateTemplateEfCore : BaseContext<UserModel>, IAuthDao
         _AuthCollection = Collection;
     }
 
-    public Task<UserModel> FindEmail(string Email)
+    public Task<UserModel> FindEmailAsync(string Email)
     {
         throw new NotImplementedException();
     }

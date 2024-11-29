@@ -286,7 +286,7 @@ public class AuthService : IAuthService
                     <p>Equipe de Suporte</p>
                 </div>";
 
-            await _emailService.SendMail(
+            await _emailService.SendMailAsync(
                   "no-reply@yourdomain.com", // Use a valid email address here
                   email,
                   "Redefinição da sua senha",

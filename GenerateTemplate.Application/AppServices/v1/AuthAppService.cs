@@ -36,7 +36,7 @@ public class AuthAppService : IAuthAppService
     {
         UserModel LoginDto = _mapper.Map<UserModel>(userLogin);
 
-        return await _authService.Login(LoginDto);
+        return await _authService.LoginAsync(LoginDto);
     }
     public async Task<OperationResult<CreateUserDto>> CreateAsync(CreateUserDto createUserDto)
     {
@@ -66,7 +66,7 @@ public class AuthAppService : IAuthAppService
 
     public async Task<OperationResult<string>> ForgetPasswordAsync(string email)
     {
-        return await _authService.ForgetPassword(email);
+        return await _authService.ForgetPasswordAsync(email);
     }
 
     public OperationResult<string> VerificationPasswordOTP(string token)
@@ -78,6 +78,6 @@ public class AuthAppService : IAuthAppService
     {
         PasswordReset passwordResetModel = _mapper.Map<PasswordReset>(passwordResetDto);
 
-        return await _authService.ResetPassword(passwordResetModel);
+        return await _authService.ResetPasswordAsync(passwordResetModel);
     }
 }

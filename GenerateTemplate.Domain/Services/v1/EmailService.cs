@@ -16,7 +16,7 @@ public class EmailService : IEmailService
         _configuration = configuration;
     }
 
-    public async Task SendMail(string from, string email, string subject, string message)
+    public async Task SendMailAsync(string from, string email, string subject, string message)
     {
         string mail = _configuration["EmailTrap:Email"];
 

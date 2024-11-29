@@ -235,7 +235,7 @@ public class AuthServiceTest
 
         // Assert
         Assert.Equal(token.ToString(), result.Content);
-        _emailServiceMock.Verify(service => service.SendMail(It.IsAny<string>(), email, It.IsAny<string>(), It.Is<string>(msg => msg.Contains(token.ToString()))), Times.Once);
+        _emailServiceMock.Verify(service => service.SendMailAsync(It.IsAny<string>(), email, It.IsAny<string>(), It.Is<string>(msg => msg.Contains(token.ToString()))), Times.Once);
         _memoryCacheServiceMock.Verify(cache => cache.AddToCache(token.ToString(), It.IsAny<UserModel>(), 5), Times.Once);
     }
 
