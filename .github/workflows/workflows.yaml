@@ -19,10 +19,6 @@ jobs:
       - name: Install PowerShell
         run: sudo apt-get install -y powershell
 
-        # Verifica o conteúdo do diretório scripts para garantir que o arquivo está lá
-      - name: List Files in Scripts Directory
-        run: ls -la .github/scripts
-
       - name: Run Async Method Validation
         run: pwsh -File .github/scripts/validate-async.ps1
         continue-on-error: false  # Falha o workflow se erros forem encontrados no script
