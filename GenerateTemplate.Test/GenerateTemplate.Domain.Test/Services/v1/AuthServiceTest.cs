@@ -46,7 +46,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetAsync_WhenAuthExist_ReturnsAuthList()
+    public async Task GetAsync_WhenAuthExist_ReturnsAuthListAsync()
     {
         // Arrange
         List<UserModel> userList = _fixture.CreateMany<UserModel>(2).ToList();
@@ -68,7 +68,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetAsync_WhenNoAuthsExist_ThrowsException()
+    public async Task GetAsync_WhenNoAuthsExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), null))
@@ -82,7 +82,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetIdAsync_WhenAuthExist_ReturnsAuth()
+    public async Task GetIdAsync_WhenAuthExist_ReturnsAuthAsync()
     {
         // Arrange
         UserModel userMock = _fixture.Build<UserModel>()
@@ -101,7 +101,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetIdAsync_WhenNotAuthExist_ThrowsException()
+    public async Task GetIdAsync_WhenNotAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
@@ -118,7 +118,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task CreateAsync_WhenAuthExist_ReturnsAuth()
+    public async Task CreateAsync_WhenAuthExist_ReturnsAuthAsync()
     {
 
         // Arrange
@@ -141,7 +141,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task CreateAsync_WhenAuthExist_ThrowsException()
+    public async Task CreateAsync_WhenAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         UserModel userMock = _fixture.Create<UserModel>();
@@ -159,7 +159,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task LoginAsync_WhenLogin_ReturnToken()
+    public async Task LoginAsync_WhenLogin_ReturnTokenAsync()
     {
         //Arrange
         UserModel userMock = _fixture.Create<UserModel>();
@@ -182,7 +182,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task LoginFindEmailNotExistAsync_WhenLogin_ThrowsException()
+    public async Task LoginFindEmailNotExistAsync_WhenLogin_ThrowsExceptionAsync()
     {
         //Arranges
         UserModel userMock = _fixture.Create<UserModel>();
@@ -200,7 +200,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task LoginVerifyPasswordAsync_WhenLogin_ThrowsException()
+    public async Task LoginVerifyPasswordAsync_WhenLogin_ThrowsExceptionAsync()
     {
         //Arrange
         UserModel userMock = _fixture.Create<UserModel>();
@@ -220,7 +220,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task ForgetPassword_WhenEmailIsValid_SendsEmailAndStoresTokenInCache()
+    public async Task ForgetPassword_WhenEmailIsValid_SendsEmailAndStoresTokenInCacheAsync()
     {
         // Arrange
         string email = "test@example.com";
@@ -240,7 +240,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task ForgetPassword_WhenEmailIsInvalid_ThrowsException()
+    public async Task ForgetPassword_WhenEmailIsInvalid_ThrowsExceptionAsync()
     {
         // Arrange
         string email = "invalid@example.com";
@@ -255,7 +255,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public void VerificationPasswordOTP_WhenTokenEmail_TokenConfirmationSentemail()
+    public void VerificationPasswordOTP_WhenTokenEmail_TokenConfirmationSentemailAsync()
     {
         UserModel user = _fixture.Create<UserModel>();
         string code = "123456789codeGenerate";
@@ -274,7 +274,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public void VerificationPasswordOTP_WhenTokenEmail_ThrowsException()
+    public void VerificationPasswordOTP_WhenTokenEmail_ThrowsExceptionAsync()
     {
         _memoryCacheServiceMock.Setup(cache => cache.GetCache<UserModel>(It.IsAny<string>())).Returns(null as UserModel);
 
@@ -288,7 +288,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task ResetPassword_WhenTokenIsValid_UpdatesPasswordAndRemovesTokenFromCache()
+    public async Task ResetPassword_WhenTokenIsValid_UpdatesPasswordAndRemovesTokenFromCacheAsync()
     {
         // Arrange
         string clientId = "validClientId";
@@ -310,7 +310,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task ResetPassword_WhenTokenIsInvalid_ThrowsException()
+    public async Task ResetPassword_WhenTokenIsInvalid_ThrowsExceptionAsync()
     {
         // Arrange
         string clientId = "invalidClientId";
@@ -331,7 +331,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task RemoveAsync_WhenTeamsExist_ReturnsTeam()
+    public async Task RemoveAsync_WhenTeamsExist_ReturnsTeamAsync()
     {
         UserModel userMock = _fixture.Build<UserModel>()
                                .With(x => x.AccountStatus, AccountStatus.Active)
@@ -352,7 +352,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task RemoveAsync_WhenNotAuthExist_ThrowsException()
+    public async Task RemoveAsync_WhenNotAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
@@ -368,7 +368,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task UpdateAsync_WhenAuthExist_ReturnsAuth()
+    public async Task UpdateAsync_WhenAuthExist_ReturnsAuthAsync()
     {
         // Arrange
         UserModel userMock = _fixture.Build<UserModel>()
@@ -394,7 +394,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task UpdateAsync_WhenNotAuthExist_ThrowsException()
+    public async Task UpdateAsync_WhenNotAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);

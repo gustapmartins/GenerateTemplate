@@ -30,7 +30,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task GetUsers_WhenCalled_ReturnsOkResultWithUsers()
+    public async Task GetUsers_WhenCalled_ReturnsOkResultWithUsersAsync()
     {
         // Arrange
         var users = _fixture.Create<OperationResult<IEnumerable<ViewUserDto>>>();
@@ -51,7 +51,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task GetUserId_WhenCalled_ReturnsOkResultWithUser()
+    public async Task GetUserId_WhenCalled_ReturnsOkResultWithUserAsync()
     {
         // Arrange
         var User = _fixture.Create<OperationResult<ViewUserDto>>();
@@ -75,7 +75,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task loginasync_whencalled_returnsokresultwithtoken()
+    public async Task loginasync_whencalled_returnsokresultwithtokenAsync()
     {
         // arrange
         var usermodel = _fixture.Create<UserModel>();
@@ -100,7 +100,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task PostTeam_WhenCalled_ReturnsCreatedAtActionResult()
+    public async Task PostTeam_WhenCalled_ReturnsCreatedAtActionResultAsync()
     {
 
         // Configure the fixture to create valid instances of RegisterDto
@@ -132,7 +132,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task ForgetPassword_WhenCalled_ReturnsOkResultWithToken()
+    public async Task ForgetPassword_WhenCalled_ReturnsOkResultWithTokenAsync()
     {
         // Arrange
         var email = _fixture.Create<string>();
@@ -158,7 +158,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task ResetPassword_WhenCalled_ReturnsOkResult()
+    public async Task ResetPassword_WhenCalled_ReturnsOkResultAsync()
     {
         // Arrange
         var passwordReset = _fixture.Create<PasswordReset>();
@@ -181,7 +181,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task RemoveUser_WhenCalled_ReturnsOkResult()
+    public async Task RemoveUser_WhenCalled_ReturnsOkResultAsync()
     {
         // Arrange
         var userMock = _fixture.Build<OperationResult<ViewUserDto>>()
@@ -206,7 +206,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task UpdateMatch_WhenCalled_ReturnsOkResultWithUser()
+    public async Task UpdateMatch_WhenCalled_ReturnsOkResultWithUserAsync()
     {
         // Arrange
         var userModel = _fixture.Create<OperationResult<ViewUserDto>>();
