@@ -16,7 +16,7 @@ public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
         _AuthCollection = Collection;
     }
 
-    public async Task<UserModel> FindEmail(string Email)
+    public async Task<UserModel> FindEmailAsync(string Email)
     {
         return await _AuthCollection.Find(x => x.Email == Email).FirstOrDefaultAsync();
     }

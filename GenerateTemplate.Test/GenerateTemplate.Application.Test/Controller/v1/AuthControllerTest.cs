@@ -64,7 +64,7 @@ public class AuthControllerTest
             .Returns(userViewDto);
 
         // Act
-        var result = await _authController.GetUserIdController(It.IsAny<string>()) as ActionResult<OperationResult<ViewUserDto>>;
+        var result = await _authController.GetUserIdControllerAsync(It.IsAny<string>()) as ActionResult<OperationResult<ViewUserDto>>;
 
         // Assert
         var okResult = result.Result as OkObjectResult;
@@ -120,7 +120,7 @@ public class AuthControllerTest
             .ReturnsAsync(userModel);
 
         // Act
-        var result = await _authController.CreateUserController(createUserDto);
+        var result = await _authController.CreateUserControllerAsync(createUserDto);
 
         // Assert
         var createdResult = result.Result as CreatedAtActionResult;
@@ -194,7 +194,7 @@ public class AuthControllerTest
             .ReturnsAsync(userMock);
 
         // Act
-        var result = await _authController.RemoveUser(It.IsAny<string>());
+        var result = await _authController.RemoveUserAsync(It.IsAny<string>());
 
         // Assert
         var okResult = result.Result as OkObjectResult;
@@ -215,7 +215,7 @@ public class AuthControllerTest
             .ReturnsAsync(userModel);
 
         // Act
-        var result = await _authController.UpdateMatch(It.IsAny<string>(), It.IsAny<UpdateUserDto>());
+        var result = await _authController.UpdateMatchAsync(It.IsAny<string>(), It.IsAny<UpdateUserDto>());
 
         // Assert
         var okResult = result.Result as OkObjectResult;

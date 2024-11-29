@@ -14,5 +14,5 @@ public interface IAuthDao : BaseDao<UserModel>
     /// </summary>
     /// <param name="Email">The email of the user to find.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the user model.</returns>
-    Task<UserModel> FindEmail(string Email);
+    Task<UserModel> FindEmailAsync(string Email);
 }
