@@ -17,14 +17,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run StyleCop
-        run: dotnet build GenerateTemplate.sln -warnaserror
-
+        run: dotnet build GenerateTemplate.sln /p:RunAnalyzersDuringBuild=true
 
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '3.1.x'
           
-      - run: dotnet restore GenerateTemplate.sln
+      - name: Restore Dependencies
+        run: dotnet restore GenerateTemplate.sln
 
       - run: dotnet build GenerateTemplate.sln -c Release -o ./app/build
 

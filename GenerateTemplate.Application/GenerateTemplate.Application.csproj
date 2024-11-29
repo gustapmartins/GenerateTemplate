@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework Condition=" '$(TargetFramework)' == '' ">net8.0</TargetFramework>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>ed5b3b1b-c83d-4989-84ab-5e01fa8080de</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
