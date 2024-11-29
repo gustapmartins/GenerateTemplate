@@ -13,7 +13,7 @@ public class GenerateTemplateService : IGenerateTemplateService
         _configuration = configuration;
     }
 
-    public async Task<string> GetAsync()
+    public string GetAsync()
     {
        return "MetodoService";
     }
