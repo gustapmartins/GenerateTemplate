@@ -21,7 +21,7 @@ jobs:
 
         # Verifica o conteúdo do diretório scripts para garantir que o arquivo está lá
       - name: List Files in Scripts Directory
-        run: ls -la ./scripts
+        run: ls -la 
 
       # Garante que o script tenha permissão de execução
       - name: Ensure script has execution permission
