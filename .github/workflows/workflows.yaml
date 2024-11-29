@@ -23,12 +23,8 @@ jobs:
       - name: List Files in Scripts Directory
         run: ls -la 
 
-      # Garante que o script tenha permissão de execução
-      - name: Ensure script has execution permission
-        run: chmod +x ./scripts/validate-async.ps1
-
       - name: Run Async Method Validation
-        run: pwsh -File ./scripts/validate-async.ps1
+        run: pwsh -File ./GenerateTemplate/scripts/validate-async.ps1
         continue-on-error: false  # Falha o workflow se erros forem encontrados no script
 
       - name: Run StyleCop
