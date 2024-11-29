@@ -142,7 +142,7 @@ public class AuthControllerTest
             .ReturnsAsync(token);
 
         // Act
-        var result = await _authController.ForgetPassword(It.IsAny<string>()) as OkObjectResult;
+        var result = await _authController.ForgetPasswordAsync(It.IsAny<string>()) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
@@ -172,7 +172,7 @@ public class AuthControllerTest
             .ReturnsAsync(AuthAppServiceMock); // Exemplo de retorno do método ResetPasswordAsync
 
         // Act
-        var result = await _authController.ResetPassword(It.IsAny<PasswordResetDto>()) as OkObjectResult;
+        var result = await _authController.ResetPasswordAsync(It.IsAny<PasswordResetDto>()) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
