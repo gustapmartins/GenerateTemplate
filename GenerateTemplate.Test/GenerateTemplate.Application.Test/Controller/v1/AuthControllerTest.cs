@@ -19,14 +19,14 @@ public class AuthControllerTest
     private readonly Fixture _fixture;
     private readonly Mock<IAuthAppService> _authAppServiceMock;
     private readonly Mock<IMapper> _mapperMock;
-    private readonly AUTHCONTROLLER _authController;
+    private readonly AuthController _authController;
 
     public AuthControllerTest()
     {
         _fixture = new Fixture();
         _authAppServiceMock = new Mock<IAuthAppService>();
         _mapperMock = new Mock<IMapper>();
-        _authController = new AUTHCONTROLLER(_authAppServiceMock.Object);
+        _authController = new AuthController(_authAppServiceMock.Object);
     }
 
     [Fact]

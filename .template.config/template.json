@@ -56,6 +56,12 @@
             "description": "Include authentication-related files",
             "datatype": "bool",
             "defaultValue": "false"
+        },
+        "GithubActions": {
+            "type": "parameter",
+            "description": "Include github actions files",
+            "datatype": "bool",
+            "defaultValue": "false"
         }
     },
     "sources": [
@@ -70,7 +76,6 @@
                 },
                 {
                     "condition": "(!DockerCompose)",
-                    
                     "exclude": [
                         "docker-compose.yml",
                         "docker-compose.override.yml",
@@ -103,6 +108,13 @@
                         "GenerateTemplate.Application.Test/AppService/v1/AuthAppServiceTest.cs",
                         "GenerateTemplate.Application.Test/Controller/v1/AuthControllerTest.cs",
                         "GenerateTemplate.Domain.Test/Services/v1/AuthServiceTest.cs"
+                    ]
+                },
+
+                {
+                    "condition": "(!GithubActions)",
+                    "exclude": [
+                        ".github"
                     ]
                 }
             ]

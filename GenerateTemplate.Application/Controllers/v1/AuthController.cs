@@ -15,11 +15,12 @@ namespace GenerateTemplate.Application.Controllers.v1;
 [ProducesResponseType(StatusCodes.Status400BadRequest)]
 [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
 [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-public class AUTHCONTROLLER : ControllerBase
+public class AuthController
+    : ControllerBase
 {
     private readonly IAuthAppService _authAppService;
 
-    public AUTHCONTROLLER(IAuthAppService authAppService)
+    public AuthController(IAuthAppService authAppService)
     {
         _authAppService = authAppService;
     }
