@@ -1,10 +1,13 @@
 ﻿using GenerateTemplate.Domain.Entity;
 using GenerateTemplate.Domain.Exceptions;
 using GenerateTemplate.Infra.CrossCutting.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace GenerateTemplate.Infra.CrossCutting.Ioc;
 
@@ -21,12 +24,15 @@ public static class DependencyInjection
             opts.Filters.Add<ExceptionFilterGeneric>();
         });
 
-        //services.AddApiVersioning(options =>
-        //{
-        //    options.AssumeDefaultVersionWhenUnspecified = true;
-        //    options.DefaultApiVersion = new ApiVersion(1, 0); // Exemplo de versão padrão
-        //    options.ReportApiVersions = true;
-        //});
+        services.AddApiVersioning(options =>
+        {
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new ApiVersion(1, 0); // Exemplo de versão padrão
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();
+        });
+
+        var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
         #region Config Swagger
 
@@ -36,8 +42,8 @@ public static class DependencyInjection
 
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Version = "v1",
-                Title = "Generate Template",
+                Title = $"Generate Template - {version}",
+                Version = version,
                 Description = "Aplicação responsavél por gerar um template generico",
                 TermsOfService = new Uri("https://example.com/terms"),
                 Contact = new OpenApiContact

@@ -7,8 +7,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace GenerateTemplate.Application.Controllers.v1;
 
-[ApiVersion("1")]
 [ApiController]
+[ApiVersion("1")]
 [Route("api/v1/[controller]", Order = 1)]
 [Produces("application/json")]
 [ApiExplorerSettings(GroupName = "v1")]

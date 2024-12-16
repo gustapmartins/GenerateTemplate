@@ -96,6 +96,18 @@ jobs:
       - name: Run Code Analysis
         run: dotnet build GenerateTemplate.Application/GenerateTemplate.Application.csproj /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
 
+      - name: Verify version change
+        run: |
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" **/*.csproj)
+          echo "Current Version: $VERSION"
+          git fetch origin main:main
+          OLD_VERSION=$(git show main:**/*.csproj | grep -oPm1 "(?<=<Version>)[^<]+")
+          echo "Old Version: $OLD_VERSION"
+          if [ "$VERSION" == "$OLD_VERSION" ]; then
+            echo "❌ Version not updated. Update the version in the .csproj file."
+            exit 1
+          fi
+
       - name: Upload Validator Results
         if: always()
         uses: actions/upload-artifact@v3
