@@ -100,9 +100,15 @@ jobs:
         run: |
           VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" **/*.csproj)
           echo "Current Version: $VERSION"
-          git fetch origin main:main
-          OLD_VERSION=$(git show main:**/*.csproj | grep -oPm1 "(?<=<Version>)[^<]+")
+          
+          # Busca a branch main remotamente sem sobrescrever a local
+          git fetch origin main
+          
+          # Obtém a versão da branch main remota
+          OLD_VERSION=$(git show origin/main:**/*.csproj | grep -oPm1 "(?<=<Version>)[^<]+")
           echo "Old Version: $OLD_VERSION"
+          
+          # Compara as versões
           if [ "$VERSION" == "$OLD_VERSION" ]; then
             echo "❌ Version not updated. Update the version in the .csproj file."
             exit 1
