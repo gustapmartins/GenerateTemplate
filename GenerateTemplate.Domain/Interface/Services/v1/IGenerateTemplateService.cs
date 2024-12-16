@@ -2,5 +2,5 @@
 
 public interface IGenerateTemplateService
 {
-    Task<string> GetAsync();
+    string GetAsync();
 }

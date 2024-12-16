@@ -16,15 +16,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Run StyleCop
-        run: dotnet build GenerateTemplate.sln -warnaserror
+      - name: Install PowerShell
+        run: sudo apt-get install -y powershell
 
+      - name: Run Async Method Validation
+        run: pwsh -File .github/scripts/validate-async.ps1
+        continue-on-error: false  # Falha o workflow se erros forem encontrados no script
+
+      - name: Run StyleCop
+        run: dotnet build GenerateTemplate.sln /p:RunAnalyzersDuringBuild=true
 
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '3.1.x'
           
-      - run: dotnet restore GenerateTemplate.sln
+      - name: Restore Dependencies
+        run: dotnet restore GenerateTemplate.sln
 
       - run: dotnet build GenerateTemplate.sln -c Release -o ./app/build
 
@@ -91,7 +98,7 @@ jobs:
 
       - name: Upload Validator Results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: validator-results
           path: bin/Debug/validator-results

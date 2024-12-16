@@ -119,7 +119,7 @@ public class AuthService : IAuthService
     {
         try
         {
-            UserModel findEmail = await _authDao.FindEmail(addObject.Email);
+            UserModel findEmail = await _authDao.FindEmailAsync(addObject.Email);
 
             if (findEmail != null)
             {
@@ -158,11 +158,11 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<OperationResult<string>> Login(UserModel userLogin)
+    public async Task<OperationResult<string>> LoginAsync(UserModel userLogin)
     {
         try
         {
-            UserModel findUser = await _authDao.FindEmail(userLogin.Email);
+            UserModel findUser = await _authDao.FindEmailAsync(userLogin.Email);
 
             if (findUser == null)
             {
@@ -254,11 +254,11 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<OperationResult<string>> ForgetPassword(string email)
+    public async Task<OperationResult<string>> ForgetPasswordAsync(string email)
     {
         try
         {
-            UserModel findEmail = await _authDao.FindEmail(email);
+            UserModel findEmail = await _authDao.FindEmailAsync(email);
 
             if (findEmail == null)
             {
@@ -286,7 +286,7 @@ public class AuthService : IAuthService
                     <p>Equipe de Suporte</p>
                 </div>";
 
-            await _emailService.SendMail(
+            await _emailService.SendMailAsync(
                   "no-reply@yourdomain.com", // Use a valid email address here
                   email,
                   "Redefinição da sua senha",
@@ -359,7 +359,7 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<OperationResult<string>> ResetPassword(PasswordReset passwordReset)
+    public async Task<OperationResult<string>> ResetPasswordAsync(PasswordReset passwordReset)
     {
         try
         {

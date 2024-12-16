@@ -46,7 +46,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetAsync_WhenAuthExist_ReturnsAuthList()
+    public async Task GetAsync_WhenAuthExist_ReturnsAuthListAsync()
     {
         // Arrange
         List<UserModel> userList = _fixture.CreateMany<UserModel>(2).ToList();
@@ -68,7 +68,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetAsync_WhenNoAuthsExist_ThrowsException()
+    public async Task GetAsync_WhenNoAuthsExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), null))
@@ -82,7 +82,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetIdAsync_WhenAuthExist_ReturnsAuth()
+    public async Task GetIdAsync_WhenAuthExist_ReturnsAuthAsync()
     {
         // Arrange
         UserModel userMock = _fixture.Build<UserModel>()
@@ -101,7 +101,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task GetIdAsync_WhenNotAuthExist_ThrowsException()
+    public async Task GetIdAsync_WhenNotAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
@@ -118,7 +118,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task CreateAsync_WhenAuthExist_ReturnsAuth()
+    public async Task CreateAsync_WhenAuthExist_ReturnsAuthAsync()
     {
 
         // Arrange
@@ -127,7 +127,7 @@ public class AuthServiceTest
                                .With(x => x.AccountStatus, AccountStatus.Active)
                                .Create();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
+        _authDaoMock.Setup(dao => dao.FindEmailAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
 
         _authDaoMock.Setup(dao => dao.CreateAsync(It.IsAny<UserModel>()));
 
@@ -136,17 +136,17 @@ public class AuthServiceTest
 
         //Assert
         Assert.Equal(userMock, createdUser.Content);
-        _authDaoMock.Verify(dao => dao.FindEmail(It.IsAny<string>()), Times.Once);
+        _authDaoMock.Verify(dao => dao.FindEmailAsync(It.IsAny<string>()), Times.Once);
         _authDaoMock.Verify(dao => dao.CreateAsync(It.IsAny<UserModel>()), Times.Once);
     }
 
     [Fact]
-    public async Task CreateAsync_WhenAuthExist_ThrowsException()
+    public async Task CreateAsync_WhenAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         UserModel userMock = _fixture.Create<UserModel>();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>())).ReturnsAsync(userMock);
+        _authDaoMock.Setup(dao => dao.FindEmailAsync(It.IsAny<string>())).ReturnsAsync(userMock);
 
         //Act
         var createdUser = await _authServiceMock.CreateAsync(userMock);
@@ -155,107 +155,107 @@ public class AuthServiceTest
         Assert.Equal($"Usuário com esse email: '{userMock.Email}', já existe.", createdUser.Message);
         Assert.False(createdUser.Status);
         Assert.Equal(StatusCodes.Status409Conflict, createdUser.StatusCode);
-        _authDaoMock.Verify(dao => dao.FindEmail(It.IsAny<string>()), Times.Once);
+        _authDaoMock.Verify(dao => dao.FindEmailAsync(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
-    public async Task LoginAsync_WhenLogin_ReturnToken()
+    public async Task LoginAsync_WhenLogin_ReturnTokenAsync()
     {
         //Arrange
         UserModel userMock = _fixture.Create<UserModel>();
         string token = _fixture.Create<string>();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>())).ReturnsAsync(userMock);
+        _authDaoMock.Setup(dao => dao.FindEmailAsync(It.IsAny<string>())).ReturnsAsync(userMock);
 
         _generateHashMock.Setup(hash => hash.VerifyPassword(userMock.Password, userMock.Password)).Returns(true);
 
         _generateHashMock.Setup(hash => hash.GenerateToken(userMock)).Returns(token);
 
         //Act
-        var result = await _authServiceMock.Login(userMock);
+        var result = await _authServiceMock.LoginAsync(userMock);
 
         //Assert
         Assert.Equal(token, result.Content);
-        _authDaoMock.Verify(dao => dao.FindEmail(It.IsAny<string>()), Times.Once);
+        _authDaoMock.Verify(dao => dao.FindEmailAsync(It.IsAny<string>()), Times.Once);
         _generateHashMock.Verify(hash => hash.VerifyPassword(userMock.Password, userMock.Password), Times.Once);
         _generateHashMock.Verify(hash => hash.GenerateToken(userMock), Times.Once);
     }
 
     [Fact]
-    public async Task LoginFindEmailNotExistAsync_WhenLogin_ThrowsException()
+    public async Task LoginFindEmailNotExistAsync_WhenLogin_ThrowsExceptionAsync()
     {
         //Arranges
         UserModel userMock = _fixture.Create<UserModel>();
         string token = _fixture.Create<string>();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
+        _authDaoMock.Setup(dao => dao.FindEmailAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
 
         //Act
-        var result = await _authServiceMock.Login(userMock);
+        var result = await _authServiceMock.LoginAsync(userMock);
 
         //Assert
         Assert.Equal($"Este email: {userMock.Email} não existe.", result.Message);
         Assert.False(result.Status);
-        _authDaoMock.Verify(dao => dao.FindEmail(It.IsAny<string>()), Times.Once);
+        _authDaoMock.Verify(dao => dao.FindEmailAsync(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
-    public async Task LoginVerifyPasswordAsync_WhenLogin_ThrowsException()
+    public async Task LoginVerifyPasswordAsync_WhenLogin_ThrowsExceptionAsync()
     {
         //Arrange
         UserModel userMock = _fixture.Create<UserModel>();
         string token = _fixture.Create<string>();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>())).ReturnsAsync(userMock);
+        _authDaoMock.Setup(dao => dao.FindEmailAsync(It.IsAny<string>())).ReturnsAsync(userMock);
 
         _generateHashMock.Setup(hash => hash.VerifyPassword(userMock.Password, userMock.Password)).Returns(false);
 
         //Act
-        var result = await _authServiceMock.Login(userMock);
+        var result = await _authServiceMock.LoginAsync(userMock);
 
         //Assert
         Assert.Equal($"Senha incorreta.", result.Message);
-        _authDaoMock.Verify(dao => dao.FindEmail(It.IsAny<string>()), Times.Once);
+        _authDaoMock.Verify(dao => dao.FindEmailAsync(It.IsAny<string>()), Times.Once);
         _generateHashMock.Verify(hash => hash.VerifyPassword(userMock.Password, userMock.Password), Times.Once);
     }
 
     [Fact]
-    public async Task ForgetPassword_WhenEmailIsValid_SendsEmailAndStoresTokenInCache()
+    public async Task ForgetPassword_WhenEmailIsValid_SendsEmailAndStoresTokenInCacheAsync()
     {
         // Arrange
         string email = "test@example.com";
         int token = 879684;
         var user = _fixture.Create<UserModel>();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(email)).ReturnsAsync(user);
+        _authDaoMock.Setup(dao => dao.FindEmailAsync(email)).ReturnsAsync(user);
         _generateHashMock.Setup(hash => hash.GenerateRandomNumber()).Returns(token);
 
         // Act
-        var result = await _authServiceMock.ForgetPassword(email);
+        var result = await _authServiceMock.ForgetPasswordAsync(email);
 
         // Assert
         Assert.Equal(token.ToString(), result.Content);
-        _emailServiceMock.Verify(service => service.SendMail(It.IsAny<string>(), email, It.IsAny<string>(), It.Is<string>(msg => msg.Contains(token.ToString()))), Times.Once);
+        _emailServiceMock.Verify(service => service.SendMailAsync(It.IsAny<string>(), email, It.IsAny<string>(), It.Is<string>(msg => msg.Contains(token.ToString()))), Times.Once);
         _memoryCacheServiceMock.Verify(cache => cache.AddToCache(token.ToString(), It.IsAny<UserModel>(), 5), Times.Once);
     }
 
     [Fact]
-    public async Task ForgetPassword_WhenEmailIsInvalid_ThrowsException()
+    public async Task ForgetPassword_WhenEmailIsInvalid_ThrowsExceptionAsync()
     {
         // Arrange
         string email = "invalid@example.com";
 
-        _authDaoMock.Setup(dao => dao.FindEmail(email))!.ReturnsAsync(null as UserModel);
+        _authDaoMock.Setup(dao => dao.FindEmailAsync(email))!.ReturnsAsync(null as UserModel);
 
         // Act and Assert
-        var result = await _authServiceMock.ForgetPassword(email);
+        var result = await _authServiceMock.ForgetPasswordAsync(email);
 
         Assert.Equal($"Este E-mail: {email} não é válido", result.Message);
-        _authDaoMock.Verify(dao => dao.FindEmail(It.IsAny<string>()), Times.Once);
+        _authDaoMock.Verify(dao => dao.FindEmailAsync(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
-    public void VerificationPasswordOTP_WhenTokenEmail_TokenConfirmationSentemail()
+    public void VerificationPasswordOTP_WhenTokenEmail_TokenConfirmationSentemailAsync()
     {
         UserModel user = _fixture.Create<UserModel>();
         string code = "123456789codeGenerate";
@@ -274,7 +274,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public void VerificationPasswordOTP_WhenTokenEmail_ThrowsException()
+    public void VerificationPasswordOTP_WhenTokenEmail_ThrowsExceptionAsync()
     {
         _memoryCacheServiceMock.Setup(cache => cache.GetCache<UserModel>(It.IsAny<string>())).Returns(null as UserModel);
 
@@ -288,7 +288,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task ResetPassword_WhenTokenIsValid_UpdatesPasswordAndRemovesTokenFromCache()
+    public async Task ResetPassword_WhenTokenIsValid_UpdatesPasswordAndRemovesTokenFromCacheAsync()
     {
         // Arrange
         string clientId = "validClientId";
@@ -302,7 +302,7 @@ public class AuthServiceTest
         _authDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).ReturnsAsync(user);
 
         // Act
-        var result = await _authServiceMock.ResetPassword(passwordReset);
+        var result = await _authServiceMock.ResetPasswordAsync(passwordReset);
 
         // Assert
         Assert.Equal("Senha Redefinida", result.Message);
@@ -310,7 +310,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task ResetPassword_WhenTokenIsInvalid_ThrowsException()
+    public async Task ResetPassword_WhenTokenIsInvalid_ThrowsExceptionAsync()
     {
         // Arrange
         string clientId = "invalidClientId";
@@ -322,7 +322,7 @@ public class AuthServiceTest
         _authDaoMock.Setup(dao => dao.GetIdAsync(clientId))!.ReturnsAsync(null as UserModel);
 
         // Act and Assert
-        var passwordResetResult = await _authServiceMock.ResetPassword(passwordReset);
+        var passwordResetResult = await _authServiceMock.ResetPasswordAsync(passwordReset);
         Assert.Equal($"Este clientId: {clientId} não é válido", passwordResetResult.Message);
         Assert.False(passwordResetResult.Status);
 
@@ -331,7 +331,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task RemoveAsync_WhenTeamsExist_ReturnsTeam()
+    public async Task RemoveAsync_WhenTeamsExist_ReturnsTeamAsync()
     {
         UserModel userMock = _fixture.Build<UserModel>()
                                .With(x => x.AccountStatus, AccountStatus.Active)
@@ -352,7 +352,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task RemoveAsync_WhenNotAuthExist_ThrowsException()
+    public async Task RemoveAsync_WhenNotAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
@@ -368,7 +368,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task UpdateAsync_WhenAuthExist_ReturnsAuth()
+    public async Task UpdateAsync_WhenAuthExist_ReturnsAuthAsync()
     {
         // Arrange
         UserModel userMock = _fixture.Build<UserModel>()
@@ -394,7 +394,7 @@ public class AuthServiceTest
     }
 
     [Fact]
-    public async Task UpdateAsync_WhenNotAuthExist_ThrowsException()
+    public async Task UpdateAsync_WhenNotAuthExist_ThrowsExceptionAsync()
     {
         // Arrange
         _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);

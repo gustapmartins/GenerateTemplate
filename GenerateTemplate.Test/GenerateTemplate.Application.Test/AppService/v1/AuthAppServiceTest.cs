@@ -35,7 +35,7 @@ public class AuthAppServiceTest
         _mapperMock.Setup(mapper => mapper.Map<UserModel>(It.IsAny<UserModel>()))
             .Returns(_fixture.Create<UserModel>());
 
-        _authServiceMock.Setup(service => service.Login(It.IsAny<UserModel>()))
+        _authServiceMock.Setup(service => service.LoginAsync(It.IsAny<UserModel>()))
             .ReturnsAsync(users);
 
         // Act
@@ -46,7 +46,7 @@ public class AuthAppServiceTest
         Assert.Equal(users.Content, result.Content);
 
         _mapperMock.Verify(dao => dao.Map<UserModel>(It.IsAny<UserModel>()), Times.Once);
-        _authServiceMock.Verify(dao => dao.Login(It.IsAny<UserModel>()), Times.Once);
+        _authServiceMock.Verify(dao => dao.LoginAsync(It.IsAny<UserModel>()), Times.Once);
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public class AuthAppServiceTest
         // Arrange
         var mapperForgetPassword = _fixture.Create<OperationResult<string>>(); // Simulate the response from service
 
-        _authServiceMock.Setup(service => service.ForgetPassword(It.IsAny<string>()))
+        _authServiceMock.Setup(service => service.ForgetPasswordAsync(It.IsAny<string>()))
             .ReturnsAsync(mapperForgetPassword);
 
         // Act
@@ -195,7 +195,7 @@ public class AuthAppServiceTest
         Assert.NotNull(result);
         Assert.Equal(mapperForgetPassword.Content, result.Content);
 
-        _authServiceMock.Verify(dao => dao.ForgetPassword(It.IsAny<string>()), Times.Once);
+        _authServiceMock.Verify(dao => dao.ForgetPasswordAsync(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -227,7 +227,7 @@ public class AuthAppServiceTest
         _mapperMock.Setup(mapper => mapper.Map<PasswordReset>(It.IsAny<PasswordResetDto>()))
             .Returns(_fixture.Create<PasswordReset>());
 
-        _authServiceMock.Setup(service => service.ResetPassword(It.IsAny<PasswordReset>()))
+        _authServiceMock.Setup(service => service.ResetPasswordAsync(It.IsAny<PasswordReset>()))
             .ReturnsAsync(mapperForgetPassword);
 
         // Act
@@ -236,6 +236,6 @@ public class AuthAppServiceTest
         Assert.NotNull(result);
         Assert.Equal(mapperForgetPassword.Content, result.Content);
 
-        _authServiceMock.Verify(dao => dao.ResetPassword(It.IsAny<PasswordReset>()), Times.Once);
+        _authServiceMock.Verify(dao => dao.ResetPasswordAsync(It.IsAny<PasswordReset>()), Times.Once);
     }
 }

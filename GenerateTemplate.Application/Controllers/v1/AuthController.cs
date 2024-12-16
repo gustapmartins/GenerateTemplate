@@ -56,7 +56,7 @@ public class AuthController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
-    public async Task<ActionResult<OperationResult<ViewUserDto>>> GetUserIdController([FromRoute] string Id)
+    public async Task<ActionResult<OperationResult<ViewUserDto>>> GetUserIdControllerAsync([FromRoute] string Id)
     {
         OperationResult<ViewUserDto> result = await _authAppService.GetIdAsync(Id);
 
@@ -78,7 +78,7 @@ public class AuthController
     [HttpPost("created-user")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<OperationResult<CreateUserDto>>> CreateUserController([FromBody] CreateUserDto createUserDto)
+    public async Task<ActionResult<OperationResult<CreateUserDto>>> CreateUserControllerAsync([FromBody] CreateUserDto createUserDto)
     {
         OperationResult<CreateUserDto> result = await _authAppService.CreateAsync(createUserDto);
 
@@ -98,7 +98,7 @@ public class AuthController
     [HttpDelete("delete-user/{Id}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<OperationResult<ViewUserDto>>> RemoveUser([FromQuery] string Id)
+    public async Task<ActionResult<OperationResult<ViewUserDto>>> RemoveUserAsync([FromQuery] string Id)
     {
         OperationResult<ViewUserDto> result = await _authAppService.RemoveAsync(Id);
 
@@ -120,7 +120,7 @@ public class AuthController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<OperationResult<ViewUserDto>>> UpdateMatch([FromRoute] string Id, [FromBody] UpdateUserDto updateUserDto)
+    public async Task<ActionResult<OperationResult<ViewUserDto>>> UpdateMatchAsync([FromRoute] string Id, [FromBody] UpdateUserDto updateUserDto)
     {
         OperationResult<ViewUserDto> result = await _authAppService.UpdateAsync(Id, updateUserDto);
 
@@ -162,7 +162,7 @@ public class AuthController
     [HttpPost("reset-password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> ResetPassword([FromBody] PasswordResetDto passwordResetDto)
+    public async Task<ActionResult> ResetPasswordAsync([FromBody] PasswordResetDto passwordResetDto)
     {
         var result = await _authAppService.ResetPasswordAsync(passwordResetDto);
 
@@ -182,7 +182,7 @@ public class AuthController
     [HttpPost("forget-password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> ForgetPassword([FromHeader] string email)
+    public async Task<ActionResult> ForgetPasswordAsync([FromHeader] string email)
     {
         var code = await _authAppService.ForgetPasswordAsync(email);
 

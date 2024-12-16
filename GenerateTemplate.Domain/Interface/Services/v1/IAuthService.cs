@@ -50,21 +50,21 @@ public interface IAuthService
     /// </summary>
     /// <param name="userLogin">The user login details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the login token.</returns>
-    Task<OperationResult<string>> Login(UserModel userLogin);
+    Task<OperationResult<string>> LoginAsync(UserModel userLogin);
 
     /// <summary>
     /// Sends a forget password email.
     /// </summary>
     /// <param name="email">The user's email.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the status of the operation.</returns>
-    Task<OperationResult<string>> ForgetPassword(string email);
+    Task<OperationResult<string>> ForgetPasswordAsync(string email);
 
     /// <summary>
     /// Resets the password.
     /// </summary>
     /// <param name="passwordReset">The password reset details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the status of the operation.</returns>
-    Task<OperationResult<string>> ResetPassword(PasswordReset passwordReset);
+    Task<OperationResult<string>> ResetPasswordAsync(PasswordReset passwordReset);
 
     /// <summary>
     /// Verifies the password OTP.

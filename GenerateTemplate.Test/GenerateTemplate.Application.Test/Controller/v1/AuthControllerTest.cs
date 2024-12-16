@@ -30,7 +30,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task GetUsers_WhenCalled_ReturnsOkResultWithUsers()
+    public async Task GetUsers_WhenCalled_ReturnsOkResultWithUsersAsync()
     {
         // Arrange
         var users = _fixture.Create<OperationResult<IEnumerable<ViewUserDto>>>();
@@ -51,7 +51,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task GetUserId_WhenCalled_ReturnsOkResultWithUser()
+    public async Task GetUserId_WhenCalled_ReturnsOkResultWithUserAsync()
     {
         // Arrange
         var User = _fixture.Create<OperationResult<ViewUserDto>>();
@@ -64,7 +64,7 @@ public class AuthControllerTest
             .Returns(userViewDto);
 
         // Act
-        var result = await _authController.GetUserIdController(It.IsAny<string>()) as ActionResult<OperationResult<ViewUserDto>>;
+        var result = await _authController.GetUserIdControllerAsync(It.IsAny<string>()) as ActionResult<OperationResult<ViewUserDto>>;
 
         // Assert
         var okResult = result.Result as OkObjectResult;
@@ -75,7 +75,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task loginasync_whencalled_returnsokresultwithtoken()
+    public async Task loginasync_whencalled_returnsokresultwithtokenAsync()
     {
         // arrange
         var usermodel = _fixture.Create<UserModel>();
@@ -100,7 +100,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task PostTeam_WhenCalled_ReturnsCreatedAtActionResult()
+    public async Task PostTeam_WhenCalled_ReturnsCreatedAtActionResultAsync()
     {
 
         // Configure the fixture to create valid instances of RegisterDto
@@ -120,7 +120,7 @@ public class AuthControllerTest
             .ReturnsAsync(userModel);
 
         // Act
-        var result = await _authController.CreateUserController(createUserDto);
+        var result = await _authController.CreateUserControllerAsync(createUserDto);
 
         // Assert
         var createdResult = result.Result as CreatedAtActionResult;
@@ -132,7 +132,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task ForgetPassword_WhenCalled_ReturnsOkResultWithToken()
+    public async Task ForgetPassword_WhenCalled_ReturnsOkResultWithTokenAsync()
     {
         // Arrange
         var email = _fixture.Create<string>();
@@ -142,7 +142,7 @@ public class AuthControllerTest
             .ReturnsAsync(token);
 
         // Act
-        var result = await _authController.ForgetPassword(It.IsAny<string>()) as OkObjectResult;
+        var result = await _authController.ForgetPasswordAsync(It.IsAny<string>()) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
@@ -158,7 +158,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task ResetPassword_WhenCalled_ReturnsOkResult()
+    public async Task ResetPassword_WhenCalled_ReturnsOkResultAsync()
     {
         // Arrange
         var passwordReset = _fixture.Create<PasswordReset>();
@@ -172,7 +172,7 @@ public class AuthControllerTest
             .ReturnsAsync(AuthAppServiceMock); // Exemplo de retorno do método ResetPasswordAsync
 
         // Act
-        var result = await _authController.ResetPassword(It.IsAny<PasswordResetDto>()) as OkObjectResult;
+        var result = await _authController.ResetPasswordAsync(It.IsAny<PasswordResetDto>()) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
@@ -181,7 +181,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task RemoveUser_WhenCalled_ReturnsOkResult()
+    public async Task RemoveUser_WhenCalled_ReturnsOkResultAsync()
     {
         // Arrange
         var userMock = _fixture.Build<OperationResult<ViewUserDto>>()
@@ -194,7 +194,7 @@ public class AuthControllerTest
             .ReturnsAsync(userMock);
 
         // Act
-        var result = await _authController.RemoveUser(It.IsAny<string>());
+        var result = await _authController.RemoveUserAsync(It.IsAny<string>());
 
         // Assert
         var okResult = result.Result as OkObjectResult;
@@ -206,7 +206,7 @@ public class AuthControllerTest
     }
 
     [Fact]
-    public async Task UpdateMatch_WhenCalled_ReturnsOkResultWithUser()
+    public async Task UpdateMatch_WhenCalled_ReturnsOkResultWithUserAsync()
     {
         // Arrange
         var userModel = _fixture.Create<OperationResult<ViewUserDto>>();
@@ -215,7 +215,7 @@ public class AuthControllerTest
             .ReturnsAsync(userModel);
 
         // Act
-        var result = await _authController.UpdateMatch(It.IsAny<string>(), It.IsAny<UpdateUserDto>());
+        var result = await _authController.UpdateMatchAsync(It.IsAny<string>(), It.IsAny<UpdateUserDto>());
 
         // Assert
         var okResult = result.Result as OkObjectResult;
