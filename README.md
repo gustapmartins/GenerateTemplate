@@ -18,7 +18,7 @@
 
 ## Descrição
 
-O **Projeto XYZ** é uma aplicação inovadora projetada para resolver problemas complexos de maneira simples e eficiente. Nosso objetivo é fornecer uma ferramenta que seja tanto poderosa quanto fácil de usar.
+O **Projeto XYZ** é uma aplicação inovadora projetada para resolver problemas complexos de maneira simples e eficiente com uma arquitetura hexagonal. Nosso objetivo é fornecer uma ferramenta que seja tanto poderosa quanto fácil de usar.
 
 ## Instalação
 
