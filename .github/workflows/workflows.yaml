@@ -97,20 +97,25 @@ jobs:
 
       - name: Verify version change
         run: |
-          VERSION=$(find . -name "*.csproj" -exec grep -oP "(?<=<Version>)[^<]+" {} \; | paste -sd, -)
+          # Encontra todas as versões nos arquivos .csproj localmente
+          VERSION=$(find . -name "*.csproj" -exec grep -oP "(?<=<Version>)[^<]+" {} \; | sort | paste -sd, -)
           echo "Current Version(s): $VERSION"
 
           # Busca a branch main remotamente sem sobrescrever a local
           git fetch origin main
 
-          # Obtém a versão da branch main remota
-          OLD_VERSION=$(git show origin/main:**/*.csproj | grep -oPm1 "(?<=<Version>)[^<]+")
-          echo "Old Version: $OLD_VERSION"
+          # Obtém todas as versões da branch main remota
+          OLD_VERSION=$(git ls-tree -r origin/main --name-only | grep "\.csproj$" | while read file; do
+            git show origin/main:"$file" | grep -oP "(?<=<Version>)[^<]+" || echo "N/A"
+          done | sort | paste -sd, -)
+          echo "Old Version(s): $OLD_VERSION"
 
           # Compara as versões
           if [ "$VERSION" == "$OLD_VERSION" ]; then
             echo "❌ Version not updated. Update the version in the .csproj file."
             exit 1
+          else
+            echo "✅ Version updated."
           fi
 
       - name: Upload Validator Results
