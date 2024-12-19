@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{9C86B107-078C-4CBF-83FE-4A6E48F69E11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{7A1053AD-6D99-4DF1-ABBB-A31B511C790B}"
-	ProjectSection(SolutionItems) = preProject
-		GenerateTemplate.Application\.gitattributes = GenerateTemplate.Application\.gitattributes
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{8E56ED55-7932-475C-9EA6-A9E995085012}"
 EndProject
