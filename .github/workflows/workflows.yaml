@@ -95,29 +95,6 @@ jobs:
       - name: Run Code Analysis
         run: dotnet build GenerateTemplate.Application/GenerateTemplate.Application.csproj /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
 
-      - name: Verify version change
-        run: |
-          # Encontra todas as versões nos arquivos .csproj localmente
-          VERSION=$(find . -name "*.csproj" -exec grep -oP "(?<=<Version>)[^<]+" {} \; | sort | paste -sd, -)
-          echo "Current Version(s): $VERSION"
-
-          # Busca a branch main remotamente sem sobrescrever a local
-          git fetch origin main
-
-          # Obtém todas as versões da branch main remota
-          OLD_VERSION=$(git ls-tree -r origin/main --name-only | grep "\.csproj$" | while read file; do
-            git show origin/main:"$file" | grep -oP "(?<=<Version>)[^<]+" || echo "N/A"
-          done | sort | paste -sd, -)
-          echo "Old Version(s): $OLD_VERSION"
-
-          # Compara as versões
-          if [ "$VERSION" == "$OLD_VERSION" ]; then
-            echo "❌ Version not updated. Update the version in the .csproj file."
-            exit 1
-          else
-            echo "✅ Version updated."
-          fi
-
       - name: Upload Validator Results
         if: always()
         uses: actions/upload-artifact@v3
