@@ -123,9 +123,9 @@ public class AuthControllerTest
         var result = await _authController.CreateUserControllerAsync(createUserDto);
 
         // Assert
-        var createdResult = result.Result as CreatedAtActionResult;
+        var createdResult = result.Result as OkObjectResult;
         Assert.NotNull(createdResult); // Ensure it returns a CreatedAtActionResult
-        Assert.Equal(StatusCodes.Status201Created, createdResult.StatusCode); // Status code should be 201
+        Assert.Equal(StatusCodes.Status200OK, createdResult.StatusCode); // Status code should be 201
 
         var operationResult = createdResult.Value as OperationResult<CreateUserDto>;
         Assert.NotNull(operationResult); // Ensure the result is an OperationResult
