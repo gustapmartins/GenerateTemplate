@@ -12,6 +12,7 @@ jobs:
   Test:
     runs-on: ubuntu-latest
     continue-on-error: false
+    needs: Validator
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
