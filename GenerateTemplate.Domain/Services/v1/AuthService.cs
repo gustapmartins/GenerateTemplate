@@ -19,6 +19,7 @@ public class AuthService : IAuthService
     private readonly IMemoryCacheService _memoryCacheService;
     private readonly IEmailService _emailService;
     private readonly IGetClientIdToken _getClientIdToken;
+    private readonly IRedisService _redisService;
 
     public AuthService(
         IAuthDao authDao,
@@ -26,7 +27,8 @@ public class AuthService : IAuthService
         IEmailService emailService,
         IMemoryCacheService memoryCacheService,
         IHttpContextAccessor httpContextAccessor,
-        IGetClientIdToken getClientIdToken)
+        IGetClientIdToken getClientIdToken,
+        IRedisService redisService)
     {
         _authDao = authDao;
         _generateHash = generateHash;
@@ -34,6 +36,7 @@ public class AuthService : IAuthService
         _memoryCacheService = memoryCacheService;
         _getClientIdToken = getClientIdToken;
         _httpContext = httpContextAccessor.HttpContext!;
+        _redisService = redisService;
     }
 
     public async Task<OperationResult<IEnumerable<UserModel>>> GetAllAsync(int page, int pageSize)
@@ -78,26 +81,40 @@ public class AuthService : IAuthService
     {
         try
         {
-            UserModel GetAsyncId = await _authDao.GetIdAsync(Id);
+            var GetUserCacheId = await _redisService.GetAsync<UserModel>(Id);
 
-            if (GetAsyncId == null)
+            if (GetUserCacheId is not null)
+            {
+                return new OperationResult<UserModel>()
+                {
+                    Content = GetUserCacheId,
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Usuário encontrado.",
+                    Status = true
+                };
+            }
+
+            UserModel GetUserAsyncId = await _authDao.GetIdAsync(Id);
+
+            if (GetUserAsyncId == null)
                 return new OperationResult<UserModel>(
                     content: default!,
                     message: $"Usuário com id: {Id} não existe.",
                     statusCode: StatusCodes.Status404NotFound,
                     status: false);
 
-
-            if (GetAsyncId.AccountStatus == 0)
+            if (GetUserAsyncId.AccountStatus == 0)
                 return new OperationResult<UserModel>(
-                    content: GetAsyncId,
+                    content: GetUserAsyncId,
                     message: "Usuário bloqueado.",
                     statusCode: StatusCodes.Status404NotFound,
                     status: false);
 
+            await _redisService.SetAsync(Id, GetUserAsyncId, TimeSpan.FromMinutes(5));
+
             return new OperationResult<UserModel>()
             {
-                Content = GetAsyncId,
+                Content = GetUserAsyncId,
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Usuário encontrado.",
                 Status = true

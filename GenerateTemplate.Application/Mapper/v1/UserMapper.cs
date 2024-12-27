@@ -11,8 +11,8 @@ public class UserMapper : Profile
 {
     public UserMapper()
     {
-        CreateMap<CreateUserDto, UserModel>();
-        CreateMap<CreateUserDto, UserModel>().ReverseMap();
+        CreateMap<UserModel, CreateUserDto>();
+        CreateMap<UserModel, CreateUserDto>().ReverseMap();
         CreateMap<LoginDto, UserModel>();
         CreateMap<ViewUserDto, UserModel>();
         CreateMap<UserModel, ViewUserDto>();

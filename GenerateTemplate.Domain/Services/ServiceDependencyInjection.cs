@@ -30,5 +30,7 @@ public static class ServiceDependencyInjection
         services.AddScoped<IGetClientIdToken, GetClientIdToken>();
 
         services.AddScoped<IGenerateHash, GenerateHash>();
+
+        services.AddScoped<IRedisService, RedisService>();
     }
 }

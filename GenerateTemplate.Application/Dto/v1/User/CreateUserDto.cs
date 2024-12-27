@@ -1,12 +1,15 @@
 ﻿using GenerateTemplate.Domain.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace GenerateTemplate.Application.Dto.v1.User;
 
 [ExcludeFromCodeCoverage]
 public class CreateUserDto
 {
+    public string _id { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Name is required")]
     public string Username { get; set; } = string.Empty;
 
@@ -19,7 +22,7 @@ public class CreateUserDto
     public string Password { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Confirm your password")]
-    [Compare("Password")]
+    [Compare("Password", ErrorMessage = "'ConfirmPassword' and 'Password' do not match.")]
     public string ConfirmPassword { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Confirm is required")]

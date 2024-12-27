@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -18,6 +19,19 @@ public static class DependencyInjection
     {
         services.Configure<DatabaseSettings>
             (configuration.GetSection("Database"));
+
+        services.AddSingleton<IConnectionMultiplexer>(provider =>
+        {
+            var redisConnection = configuration.GetValue<string>("Redis:ConnectionString") ?? "localhost:6379";
+            return ConnectionMultiplexer.Connect(redisConnection);
+        });
+
+        services.AddSingleton<IDatabase>(provider =>
+        {
+            var connection = provider.GetRequiredService<IConnectionMultiplexer>();
+            return connection.GetDatabase();
+        });
+
 
         services.AddControllers(opts =>
         {

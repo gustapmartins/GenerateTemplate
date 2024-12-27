@@ -2,7 +2,6 @@
 using GenerateTemplate.Domain.Entity;
 using GenerateTemplate.Domain.Entity.UserEntity;
 using GenerateTemplate.Domain.Enum;
-using GenerateTemplate.Domain.Exceptions;
 using GenerateTemplate.Domain.Interface.Dao;
 using GenerateTemplate.Domain.Interface.Services;
 using GenerateTemplate.Domain.Interface.Services.v1;
@@ -23,6 +22,7 @@ public class AuthServiceTest
     private readonly Mock<IGetClientIdToken> _getClientIdToken;
     private readonly Mock<IMemoryCacheService> _memoryCacheServiceMock;
     private readonly Mock<IGenerateHash> _generateHashMock;
+    private readonly Mock<IRedisService> _redisServiceMock;
     private readonly IAuthService _authServiceMock;
 
     public AuthServiceTest()
@@ -34,6 +34,7 @@ public class AuthServiceTest
         _generateHashMock = new Mock<IGenerateHash>();
         _getClientIdToken = new Mock<IGetClientIdToken>(); // Initialize the mock
         _httpContext = new Mock<IHttpContextAccessor>(); // Initialize the mock
+        _redisServiceMock = new Mock<IRedisService>();
 
         _authServiceMock = new AuthService(
             _authDaoMock.Object,
@@ -41,7 +42,8 @@ public class AuthServiceTest
             _emailServiceMock.Object,
             _memoryCacheServiceMock.Object,
             _httpContext.Object, // Pass the initialized mock
-            _getClientIdToken.Object // Pass the initialized mock
+            _getClientIdToken.Object, // Pass the initialized mock
+            _redisServiceMock.Object
         );
     }
 

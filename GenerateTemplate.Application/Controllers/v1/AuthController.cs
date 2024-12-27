@@ -9,7 +9,7 @@ namespace GenerateTemplate.Application.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1")]
-[Route("api/v1/[controller]", Order = 1)]
+[Route("api/v1/[controller]")]
 [Produces("application/json")]
 [ApiExplorerSettings(GroupName = "v1")]
 [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -83,7 +83,7 @@ public class AuthController
         OperationResult<CreateUserDto> result = await _authAppService.CreateAsync(createUserDto);
 
         if (result.Content is not null)
-            return CreatedAtAction(nameof(GetUsersControlleraAsync), result);
+            return Ok(result);
         else
             return NoContent();
     }
