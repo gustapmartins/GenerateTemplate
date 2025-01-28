@@ -20,12 +20,10 @@ namespace GenerateTemplate.Application.Controllers.v1;
 public class AuthController : BaseController
 {
     private readonly IAuthAppService _authAppService;
-    private readonly INotificationBase _notificationBase;
 
-    public AuthController(INotificationBase notificationBase, IAuthAppService authAppService) : base(notificationBase)
+    public AuthController(IAuthAppService authAppService, INotificationBase notificationBase) : base(notificationBase)
     {
         _authAppService = authAppService;
-        _notificationBase = notificationBase;
     } 
 
     /// <summary>
@@ -42,7 +40,9 @@ public class AuthController : BaseController
     public async Task<ActionResult<OperationResult<IEnumerable<ViewUserDto>>>> GetUsersControlleraAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         OperationResult<IEnumerable<ViewUserDto>> result = await _authAppService.GetAsync(page, pageSize);
- 
+
+        if (HasNotifications())
+            return ResponseResult(result);
         if (result.Content.Any())
             return Ok(result);
         else
@@ -86,7 +86,9 @@ public class AuthController : BaseController
     public async Task<ActionResult<OperationResult<CreateUserDto>>> CreateUserControllerAsync([FromBody] CreateUserDto createUserDto)
     {
         OperationResult<CreateUserDto> result = await _authAppService.CreateAsync(createUserDto);
-
+        
+        if (HasNotifications())
+            return ResponseResult(result);
         if (result.Content is not null)
             return Ok(result);
         else
@@ -107,6 +109,8 @@ public class AuthController : BaseController
     {
         OperationResult<ViewUserDto> result = await _authAppService.RemoveAsync(Id);
 
+        if (HasNotifications())
+            return ResponseResult(result);
         if (result.Content is not null)
             return Ok(result);
         else
@@ -129,6 +133,8 @@ public class AuthController : BaseController
     {
         OperationResult<ViewUserDto> result = await _authAppService.UpdateAsync(Id, updateUserDto);
 
+        if (HasNotifications())
+            return ResponseResult(result);
         if (result.Content is not null)
             return Ok(result);
         else
@@ -169,7 +175,7 @@ public class AuthController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ResetPasswordAsync([FromBody] PasswordResetDto passwordResetDto)
     {
-        var result = await _authAppService.ResetPasswordAsync(passwordResetDto);
+        OperationResult<string> result = await _authAppService.ResetPasswordAsync(passwordResetDto);
 
         if (result is not null)
             return Ok(result);
@@ -210,6 +216,7 @@ public class AuthController : BaseController
     public ActionResult VerificationPasswordOTP([FromHeader] string token)
     {
         OperationResult<string> hashToken = _authAppService.VerificationPasswordOTP(token);
+
 
         if (hashToken is not null)
             return Ok(new { token = hashToken });

@@ -53,7 +53,7 @@ public class AuthService : IAuthService
 
             if (GetAll.Count() == 0)
             {
-                return ResponseObject<IEnumerable<UserModel>>(GetAll, "Não há usuários cadastrados.", StatusCodes.Status404NotFound, false);
+                return ResponseObject(GetAll, "Não há usuários cadastrados.", StatusCodes.Status404NotFound, false);
             }
 
             return ResponseObject(GetAll, "Usuários encontrados.", StatusCodes.Status200OK, true);
@@ -80,7 +80,7 @@ public class AuthService : IAuthService
             if (GetUserAsyncId is null)
             {
                 await _notificationBase.NotifyAsync("Usuário não encontrado.", $"Usuário com id: {Id} não existe.");
-                return ResponseObject<UserModel>(GetUserAsyncId, "Usuário não existe.", StatusCodes.Status204NoContent, false);
+                return ResponseObject<UserModel>(GetUserAsyncId, $"Usuário com id: {Id} não existe.", StatusCodes.Status204NoContent, false);
             }
 
             if (GetUserAsyncId.AccountStatus == 0)

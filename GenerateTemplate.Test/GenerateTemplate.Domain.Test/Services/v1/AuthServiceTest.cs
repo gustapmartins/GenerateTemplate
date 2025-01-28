@@ -7,6 +7,7 @@ using GenerateTemplate.Domain.Interface.Services;
 using GenerateTemplate.Domain.Interface.Services.v1;
 using GenerateTemplate.Domain.Interface.Utils;
 using GenerateTemplate.Domain.Services.v1;
+using GenerateTemplate.Domain.Validation;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using Moq;
@@ -24,6 +25,7 @@ public class AuthServiceTest
     private readonly Mock<IGenerateHash> _generateHashMock;
     private readonly Mock<IRedisService> _redisServiceMock;
     private readonly IAuthService _authServiceMock;
+    private readonly Mock<INotificationBase> _notificationBase;
 
     public AuthServiceTest()
     {
@@ -35,6 +37,7 @@ public class AuthServiceTest
         _getClientIdToken = new Mock<IGetClientIdToken>(); // Initialize the mock
         _httpContext = new Mock<IHttpContextAccessor>(); // Initialize the mock
         _redisServiceMock = new Mock<IRedisService>();
+        _notificationBase = new Mock<INotificationBase>();
 
         _authServiceMock = new AuthService(
             _authDaoMock.Object,
@@ -43,7 +46,8 @@ public class AuthServiceTest
             _memoryCacheServiceMock.Object,
             _httpContext.Object, // Pass the initialized mock
             _getClientIdToken.Object, // Pass the initialized mock
-            _redisServiceMock.Object
+            _redisServiceMock.Object,
+            _notificationBase.Object
         );
     }
 

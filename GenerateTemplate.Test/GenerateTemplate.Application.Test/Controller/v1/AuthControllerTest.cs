@@ -6,6 +6,8 @@ using GenerateTemplate.Application.Dto.v1.User;
 using GenerateTemplate.Domain.Entity;
 using GenerateTemplate.Domain.Entity.UserEntity;
 using GenerateTemplate.Domain.Enum;
+using GenerateTemplate.Domain.Interface.Services.v1;
+using GenerateTemplate.Domain.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -20,13 +22,15 @@ public class AuthControllerTest
     private readonly Mock<IAuthAppService> _authAppServiceMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly AuthController _authController;
+    private readonly Mock<INotificationBase> _notificationBase;
 
     public AuthControllerTest()
     {
         _fixture = new Fixture();
         _authAppServiceMock = new Mock<IAuthAppService>();
+        _notificationBase = new Mock<INotificationBase>();
         _mapperMock = new Mock<IMapper>();
-        _authController = new AuthController(_authAppServiceMock.Object);
+        _authController = new AuthController(_authAppServiceMock.Object, _notificationBase.Object);
     }
 
     [Fact]
