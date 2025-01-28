@@ -1,5 +1,5 @@
 using GenerateTemplate.Application.AppServices;
-using GenerateTemplate.Domain.Services;
+using GenerateTemplate.Domain;
 using GenerateTemplate.Infra.CrossCutting.Ioc;
 using GenerateTemplate.Infra.Data;
 using System.Reflection;

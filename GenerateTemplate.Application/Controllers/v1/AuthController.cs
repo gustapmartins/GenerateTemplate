@@ -1,6 +1,8 @@
 ﻿using GenerateTemplate.Application.AppServices.v1.Interfaces;
 using GenerateTemplate.Application.Dto.v1.User;
 using GenerateTemplate.Domain.Entity;
+using GenerateTemplate.Domain.Interface.Services.v1;
+using GenerateTemplate.Domain.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -15,15 +17,16 @@ namespace GenerateTemplate.Application.Controllers.v1;
 [ProducesResponseType(StatusCodes.Status400BadRequest)]
 [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
 [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-public class AuthController
-    : ControllerBase
+public class AuthController : BaseController
 {
     private readonly IAuthAppService _authAppService;
+    private readonly INotificationBase _notificationBase;
 
-    public AuthController(IAuthAppService authAppService)
+    public AuthController(INotificationBase notificationBase, IAuthAppService authAppService) : base(notificationBase)
     {
         _authAppService = authAppService;
-    }
+        _notificationBase = notificationBase;
+    } 
 
     /// <summary>
     ///     Consultar todas as partidas criadas
@@ -39,7 +42,7 @@ public class AuthController
     public async Task<ActionResult<OperationResult<IEnumerable<ViewUserDto>>>> GetUsersControlleraAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         OperationResult<IEnumerable<ViewUserDto>> result = await _authAppService.GetAsync(page, pageSize);
-
+ 
         if (result.Content.Any())
             return Ok(result);
         else
@@ -60,6 +63,8 @@ public class AuthController
     {
         OperationResult<ViewUserDto> result = await _authAppService.GetIdAsync(Id);
 
+        if (HasNotifications())
+            return ResponseResult(result);
         if (result.Content is not null)
             return Ok(result);
         else

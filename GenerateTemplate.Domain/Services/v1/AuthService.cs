@@ -10,6 +10,7 @@ using GenerateTemplate.Domain.Interface.Services.v1;
 using GenerateTemplate.Domain.Interface.Utils;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
+using System.Collections.Generic;
 
 public class AuthService : IAuthService
 {
@@ -20,6 +21,7 @@ public class AuthService : IAuthService
     private readonly IEmailService _emailService;
     private readonly IGetClientIdToken _getClientIdToken;
     private readonly IRedisService _redisService;
+    private readonly INotificationBase _notificationBase;
 
     public AuthService(
         IAuthDao authDao,
@@ -28,7 +30,9 @@ public class AuthService : IAuthService
         IMemoryCacheService memoryCacheService,
         IHttpContextAccessor httpContextAccessor,
         IGetClientIdToken getClientIdToken,
-        IRedisService redisService)
+        IRedisService redisService,
+        INotificationBase notificationBase
+        )
     {
         _authDao = authDao;
         _generateHash = generateHash;
@@ -37,6 +41,7 @@ public class AuthService : IAuthService
         _getClientIdToken = getClientIdToken;
         _httpContext = httpContextAccessor.HttpContext!;
         _redisService = redisService;
+        _notificationBase = notificationBase;
     }
 
     public async Task<OperationResult<IEnumerable<UserModel>>> GetAllAsync(int page, int pageSize)
@@ -48,32 +53,14 @@ public class AuthService : IAuthService
 
             if (GetAll.Count() == 0)
             {
-                return new OperationResult<IEnumerable<UserModel>>()
-                {
-                    Message = "Não há usuários cadastrados.",
-                    Content = GetAll,
-                    StatusCode = StatusCodes.Status404NotFound,
-                    Status = false
-                };
+                return ResponseObject<IEnumerable<UserModel>>(GetAll, "Não há usuários cadastrados.", StatusCodes.Status404NotFound, false);
             }
 
-            return new()
-            {
-                StatusCode = StatusCodes.Status200OK,
-                Content = GetAll,
-                Message = "Usuários encontrados.",
-                Status = true,
-            };
+            return ResponseObject(GetAll, "Usuários encontrados.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new()
-            {
-                Content = Enumerable.Empty<UserModel>(),
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Status = false,
-            };
+            return ResponseObject(Enumerable.Empty<UserModel>(), ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -85,50 +72,30 @@ public class AuthService : IAuthService
 
             if (GetUserCacheId is not null)
             {
-                return new OperationResult<UserModel>()
-                {
-                    Content = GetUserCacheId,
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = "Usuário encontrado.",
-                    Status = true
-                };
+                return ResponseObject(GetUserCacheId, "Usuário encontrado.", StatusCodes.Status200OK, false);
             }
 
             UserModel GetUserAsyncId = await _authDao.GetIdAsync(Id);
 
-            if (GetUserAsyncId == null)
-                return new OperationResult<UserModel>(
-                    content: default!,
-                    message: $"Usuário com id: {Id} não existe.",
-                    statusCode: StatusCodes.Status404NotFound,
-                    status: false);
+            if (GetUserAsyncId is null)
+            {
+                await _notificationBase.NotifyAsync("Usuário não encontrado.", $"Usuário com id: {Id} não existe.");
+                return ResponseObject<UserModel>(GetUserAsyncId, "Usuário não existe.", StatusCodes.Status204NoContent, false);
+            }
 
             if (GetUserAsyncId.AccountStatus == 0)
-                return new OperationResult<UserModel>(
-                    content: GetUserAsyncId,
-                    message: "Usuário bloqueado.",
-                    statusCode: StatusCodes.Status404NotFound,
-                    status: false);
+            {
+                await _notificationBase.NotifyAsync("Usuário bloqueado", "Usuário permanece com a conta bloqueada");
+                return ResponseObject(GetUserAsyncId, "Usuário bloqueado.", StatusCodes.Status204NoContent, false);
+            }
 
             await _redisService.SetAsync(Id, GetUserAsyncId, TimeSpan.FromMinutes(5));
-
-            return new OperationResult<UserModel>()
-            {
-                Content = GetUserAsyncId,
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Usuário encontrado.",
-                Status = true
-            };
+            return ResponseObject(GetUserAsyncId, "Usuário encontrado", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<UserModel>()
-            {
-                Content = default!,
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Status = false,
-            };
+            await _notificationBase.NotifyAsync("Error internal", ex.Message);
+            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -140,13 +107,7 @@ public class AuthService : IAuthService
 
             if (findEmail != null)
             {
-                return new OperationResult<UserModel>()
-                {
-                    Content = default!,
-                    Message = $"Usuário com esse email: '{addObject.Email}', já existe.",
-                    StatusCode = StatusCodes.Status409Conflict,
-                    Status = false
-                };
+                return ResponseObject<UserModel>(default!, $"Usuário com esse email: '{addObject.Email}', já existe.", StatusCodes.Status409Conflict, false);
             }
 
             addObject.Password = _generateHash.GenerateHashParameters(addObject.Password);
@@ -155,23 +116,11 @@ public class AuthService : IAuthService
 
             await _authDao.CreateAsync(addObject);
 
-            return new OperationResult<UserModel>() 
-            {
-                Content = addObject,    
-                Message = "Usuário criado com sucesso.",
-                StatusCode = StatusCodes.Status200OK,
-                Status = true
-            };
+            return ResponseObject(addObject, "Usuário criado com sucesso.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<UserModel>()
-            {
-                Content = default!,
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Status = false,
-            };
+            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -183,13 +132,7 @@ public class AuthService : IAuthService
 
             if (findUser == null)
             {
-                return new OperationResult<string>()
-                {
-                    Content = string.Empty,
-                    Message = $"Este email: {userLogin.Email} não existe.",
-                    StatusCode = StatusCodes.Status409Conflict,
-                    Status = false,
-                };
+                return ResponseObject<string>(default!, $"Este email: {userLogin.Email} não existe.", StatusCodes.Status409Conflict, false);
             }
 
             //Faz uma validação para verificar se a senha que o usuariop está passando corresponde a senha salva no banco, em formato hash
@@ -197,35 +140,17 @@ public class AuthService : IAuthService
 
             if (!isPasswordCorrect)
             {
-                return new OperationResult<string>()
-                {
-                    Content = string.Empty,
-                    Message = $"Senha incorreta.",
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Status = false,
-                };
+                return ResponseObject<string>(default!, $"Senha incorreta.", StatusCodes.Status400BadRequest, false);
             }
 
             //Gera um token a partir do usuario buscado pelo E-mail
             string token = _generateHash.GenerateToken(findUser);
 
-            return new OperationResult<string>()
-            {
-                Content = token,    
-                Message = "Usuário logado com sucesso.",
-                StatusCode = StatusCodes.Status200OK,
-                Status = true,
-            };
+            return ResponseObject(token, "Usuário logado com sucesso.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<string>()
-            {
-                Content = string.Empty,
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Status = false,
-            };
+            return ResponseObject(ex.ToString(), ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -236,13 +161,7 @@ public class AuthService : IAuthService
             OperationResult<UserModel> userView = await GetIdAsync(Id);
 
             if (userView.Content == null)
-                return new OperationResult<UserModel>()
-                {
-                    Content = userView.Content!,
-                    Message = userView.Message,
-                    StatusCode = userView.StatusCode,
-                    Status = userView.Status
-                };
+                return ResponseObject(userView.Content!, userView.Message, userView.StatusCode, userView.Status);
 
             var updateFields = new Dictionary<string, object>
             {
@@ -251,23 +170,11 @@ public class AuthService : IAuthService
 
             UserModel updateUser = await _authDao.UpdateAsync(Id, updateFields);
 
-            return new OperationResult<UserModel>()
-            {
-                Content = updateUser,
-                Message = "Usuário bloqueado.",
-                StatusCode = StatusCodes.Status200OK,
-                Status = true
-            };
+            return ResponseObject(updateUser, "Usuário bloqueado.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<UserModel>()
-            {
-                Content = default!,
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Status = false
-            };
+            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -279,13 +186,7 @@ public class AuthService : IAuthService
 
             if (findEmail == null)
             {
-                return new OperationResult<string>()
-                {
-                    Content = string.Empty,
-                    Message = $"Este E-mail: {email} não é válido",
-                    StatusCode = StatusCodes.Status404NotFound,
-                    Status = false
-                };
+                return ResponseObject<string>(default!, $"Este E-mail: {email} não é válido", StatusCodes.Status404NotFound, false);
             }
 
             string token = _generateHash.GenerateRandomNumber().ToString();
@@ -312,23 +213,11 @@ public class AuthService : IAuthService
 
             _memoryCacheService.AddToCache(token, findEmail, 5);
 
-            return new OperationResult<string>()
-            { 
-                Content = token,
-                Message = "Email enviado com sucesso!",
-                StatusCode = StatusCodes.Status200OK,
-                Status = true
-            };
+            return ResponseObject<string>(token, $"Email enviado com sucesso!", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<string>()
-            {
-                Content = string.Empty,
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Status = false
-            };
+            return ResponseObject(ex.ToString(), ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -339,13 +228,7 @@ public class AuthService : IAuthService
             OperationResult<UserModel> userView = await GetIdAsync(Id);
 
             if (userView.Content == null)
-                return new OperationResult<UserModel>()
-                {
-                    Content = userView.Content!,
-                    Message = userView.Message,
-                    StatusCode = userView.StatusCode,
-                    Status = userView.Status
-                };
+                return ResponseObject(userView.Content!, userView.Message, userView.StatusCode, userView.Status);
 
             var updateFields = new Dictionary<string, object>
             {
@@ -356,23 +239,11 @@ public class AuthService : IAuthService
 
             UserModel userUpdate = await _authDao.UpdateAsync(Id, updateFields);
 
-            return new OperationResult<UserModel>()
-            {
-                Content = userUpdate,
-                Message = "Usuário atualizado com sucesso.",
-                StatusCode = StatusCodes.Status200OK,
-                Status = true
-            };
+            return ResponseObject(userUpdate, "Usuário atualizado com sucesso.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<UserModel>()
-            {
-                Content = default!,
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status200OK,
-                Status = false
-            };
+            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -386,13 +257,7 @@ public class AuthService : IAuthService
 
             if (user == null)
             {
-                return new OperationResult<string>()
-                {
-                    Content = default!,
-                    Message = $"Este clientId: {clientId} não é válido",
-                    StatusCode = StatusCodes.Status404NotFound,
-                    Status = false,
-                };
+                return ResponseObject<string>(default!, $"Este clientId: {clientId} não é válido", StatusCodes.Status204NoContent, false);
             }
 
             var updateFields = new Dictionary<string, object>
@@ -402,23 +267,11 @@ public class AuthService : IAuthService
 
             UserModel updatePassword = await _authDao.UpdateAsync(user.Id, updateFields);
 
-            return new OperationResult<string>() 
-            { 
-                Status = true,
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Senha Redefinida",
-                Content = default!
-            };
+            return ResponseObject<string>(default!, "Senha Redefinida", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<string>()
-            {
-                StatusCode = StatusCodes.Status200OK,
-                Message = ex.Message,
-                Content = string.Empty,
-                Status = false
-            };
+            return ResponseObject(ex.ToString(), ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -430,36 +283,33 @@ public class AuthService : IAuthService
 
             if (passwordResetCache == null)
             {
-                return new OperationResult<string>()
-                {
-                    Content = default!,
-                    Message = "Este token está expirado",
-                    StatusCode = StatusCodes.Status404NotFound,
-                    Status = false
-                };
+                return ResponseObject<string>(default!, "Este token está expirado", StatusCodes.Status204NoContent, false);
             }
 
             string generateToken = _generateHash.GenerateToken(passwordResetCache);
 
             _memoryCacheService.RemoveFromCache<PasswordReset>(token);
 
-            return new OperationResult<string>()
-            {
-                Content = generateToken,
-                Message = "Token verififcado",
-                StatusCode = StatusCodes.Status200OK,
-                Status = true
-            };
+            return ResponseObject(generateToken, "Token verififcado", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return new OperationResult<string>()
-            {
-                Content = default!,
-                Message = ex.Message,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Status = false
-            };
+            return ResponseObject(ex.ToString(), ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
+
+    #region Metodos privados 
+
+    private OperationResult<T> ResponseObject<T>(T content, string message, int statusCode, bool status)
+    {
+        return new OperationResult<T>()
+        {
+            Content = content,
+            Message = message,
+            StatusCode = statusCode,
+            Status = status
+        };
+    }
+
+    #endregion
 }

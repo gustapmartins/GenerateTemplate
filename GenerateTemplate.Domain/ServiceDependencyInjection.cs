@@ -5,22 +5,23 @@ using GenerateTemplate.Domain.Interface.Utils;
 using GenerateTemplate.Domain.JwtHelper;
 using GenerateTemplate.Domain.Services.v1;
 using GenerateTemplate.Domain.Utils;
+using GenerateTemplate.Domain.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 using VarzeaLeague.Domain.Service;
 
-namespace GenerateTemplate.Domain.Services;
+namespace GenerateTemplate.Domain;
 
 [ExcludeFromCodeCoverage]
 public static class ServiceDependencyInjection
 {
     public static void ServiceDependencyInjectionModule(this IServiceCollection services)
     {
-    #if DEBUG
+#if DEBUG
         services.AddScoped<IAuthService, AuthService>();
-    #elif Authorization
+#elif Authorization
         Authorization.ConfigureAuth(services);
-    #endif
+#endif
         services.AddScoped<IEmailService, EmailService>();
 
         services.AddScoped<IGenerateTemplateService, GenerateTemplateService>();
@@ -32,5 +33,7 @@ public static class ServiceDependencyInjection
         services.AddScoped<IGenerateHash, GenerateHash>();
 
         services.AddScoped<IRedisService, RedisService>();
+
+        services.AddScoped<INotificationBase, NotificationBase>();
     }
 }

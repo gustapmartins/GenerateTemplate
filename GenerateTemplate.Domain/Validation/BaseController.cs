@@ -1,0 +1,31 @@
+﻿using GenerateTemplate.Domain.Interface.Services.v1;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GenerateTemplate.Domain.Validation;
+
+public abstract class BaseController : ControllerBase
+{
+    private readonly INotificationBase _notificationBase;
+
+    protected BaseController(INotificationBase notificationBase)
+    {
+        _notificationBase = notificationBase;
+    }
+
+    protected INotificationBase Notifications => _notificationBase;
+
+    protected bool HasNotifications()
+    {
+        return _notificationBase.HasNotifications();
+    }
+
+    protected ActionResult<T> ResponseResult<T>(T Result)
+    {
+        return UnprocessableEntity(new
+        {
+            Success = false,
+            Errors = _notificationBase.GetNotifications(),
+            Data = Result
+        });
+    }
+}
