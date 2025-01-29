@@ -7,12 +7,11 @@
     <UserSecretsId>ed5b3b1b-c83d-4989-84ab-5e01fa8080de</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<NoWarn>${NoWarn};1591</NoWarn>
-	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-	<DefineConstants>$(DefineConstants);TEMPLATE_DEBUG</DefineConstants>
-	<Version>1.0.0.0</Version>
-	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>${NoWarn};1591</NoWarn>
+    <DefineConstants>$(DefineConstants);TEMPLATE_DEBUG</DefineConstants> 
+    <Version>1.0.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

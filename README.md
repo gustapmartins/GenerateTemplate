@@ -1,50 +1,102 @@
-# Projeto XYZ
+# GenerateTemplate - .NET Project Template
 
-![Licença](https://img.shields.io/badge/licença-MIT-blue.svg)
-![Versão](https://img.shields.io/badge/versão-1.0.0-green.svg)
+Este repositório contém um template personalizado para projetos .NET, permitindo a geração rápida de uma estrutura padronizada com configurações pré-definidas.
 
-## Índice
+## Requisitos
 
-1. [Descrição](#descrição)
-2. [Instalação](#instalação)
-3. [Uso](#uso)
-4. [Funcionalidades](#funcionalidades)
-5. [Tecnologias](#tecnologias)
-6. [Contribuição](#contribuição)
-7. [Licença](#licença)
-8. [Contato](#contato)
+Antes de instalar e usar o template, certifique-se de que você tem os seguintes requisitos atendidos:
 
----
+- .NET SDK 6.0 ou superior instalado
+- Git (opcional, para clonar o repositório)
 
-## Descrição
+## Instalação do Template
 
-O **Projeto XYZ** é uma aplicação inovadora projetada para resolver problemas complexos de maneira simples e eficiente com uma arquitetura hexagonal. Nosso objetivo é fornecer uma ferramenta que seja tanto poderosa quanto fácil de usar.
+Para instalar o template localmente, execute o seguinte comando no terminal:
 
-## Instalação
+```sh
+dotnet new install C:\Github\GenerateTemplate\.template.config
+```
 
-Para instalar o projeto, siga os passos abaixo:
+Se você estiver usando um repositório Git, clone-o primeiro:
 
-1. Clone o repositório:
+```sh
+git clone https://github.com/seu-usuario/GenerateTemplate.git
+cd GenerateTemplate
+```
 
-    ```bash
-    git clone https://github.com/seu-usuario/projeto-xyz.git
-    ```
+## Como Usar o Template
 
-2. Entre no diretório do projeto:
+Depois de instalado, você pode listar os templates disponíveis com:
 
-    ```bash
-    cd projeto-xyz
-    ```
+```sh
+dotnet new list
+```
 
-3. Instale as dependências:
+Para exibir as opções do seu template, utilize:
 
-    ```bash
-    npm install
-    ```
+```sh
+dotnet new generateTemplate --help
+```
 
-## Uso
+### Criando um Novo Projeto
 
-Após a instalação, você pode iniciar a aplicação com o comando:
+Para criar um novo projeto usando esse template, execute o seguinte comando:
 
-```bash
-npm start
+```sh
+dotnet new generateTemplate -n NomeDoProjeto -o Caminho/Destino
+```
+
+Se quiser testar sem criar arquivos, use:
+
+```sh
+dotnet new generateTemplate --dry-run
+```
+
+## Opções Disponíveis no Template
+
+### Parâmetros Gerais
+
+| Opção | Descrição |
+|---------|-------------|
+| `-n, --name` | Define o nome do projeto gerado. |
+| `-o, --output` | Especifica o diretório de saída. |
+| `--dry-run` | Simula a criação sem modificar arquivos. |
+| `--force` | Sobrescreve arquivos existentes. |
+
+### Configurações do Projeto
+
+| Opção | Descrição |
+|---------|-------------|
+| `-F, --Framework <net6.0|net7.0|net8.0>` | Define a versão do .NET Framework. Padrão: `net8.0` |
+| `-E, --EnableSwaggerSupport` | Ativa o suporte ao Swagger para documentação da API. Padrão: `true` |
+| `-A, --AppSettingsDev` | Inclui um arquivo `appsettings.Development.json`. Padrão: `true` |
+| `-D, --DockerCompose` | Adiciona um `docker-compose.yml`. Padrão: `true` |
+| `-Au, --Authentication` | Adiciona arquivos relacionados à autenticação. Padrão: `false` |
+| `-G, --GithubActions` | Inclui arquivos de configuração do GitHub Actions. Padrão: `false` |
+
+### Exemplo de Uso Completo
+
+Criando um projeto chamado `MinhaApi` com .NET 7.0, sem Swagger e com suporte a Docker:
+
+```sh
+dotnet new generateTemplate -n MinhaApi -F net7.0 -E false -D true
+```
+
+Isso criará um novo projeto na pasta atual com a estrutura padrão e os recursos especificados.
+
+## Removendo o Template
+
+Se precisar remover o template instalado, use:
+
+```sh
+dotnet new uninstall C:\Github\GenerateTemplate\.template.config
+```
+
+## Contribuição
+
+Sinta-se à vontade para contribuir com melhorias! Basta abrir um Pull Request com suas sugestões.
+
+## Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
