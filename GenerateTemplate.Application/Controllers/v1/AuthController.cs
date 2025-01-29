@@ -173,7 +173,7 @@ public class AuthController : BaseController
     [HttpPost("reset-password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> ResetPassword([FromBody] PasswordResetDto passwordResetDto)
+    public async Task<ActionResult> ResetPasswordAsync([FromBody] PasswordResetDto passwordResetDto)
     {
         OperationResult<string> result = await _authAppService.ResetPasswordAsync(passwordResetDto);
 
