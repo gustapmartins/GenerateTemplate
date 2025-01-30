@@ -5,7 +5,7 @@ using GenerateTemplate.Infra.Data.Context;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace VarzeaLeague.Infra.Data.Repository.EfCore;
+namespace GenerateTemplate.Infra.Data.Repository.EfCore;
 
 public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
 {

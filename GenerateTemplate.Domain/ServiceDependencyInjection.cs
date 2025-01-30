@@ -19,12 +19,10 @@ public static class ServiceDependencyInjection
 {
     public static void ServiceDependencyInjectionModule(this IServiceCollection services)
     {
-#if Authentication|| DEBUG
+#if Authentication || DEBUG
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IGetClientIdToken, GetClientIdToken>();
 #endif
-        services.AddScoped<IAuthService, AuthService>();
-
         services.AddScoped<IEmailService, EmailService>();
 
         services.AddScoped<IGenerateTemplateService, GenerateTemplateService>();

@@ -95,13 +95,13 @@
                         "GenerateTemplate.Domain/Interface/Services/v1/IAuthService.cs",
                         "GenerateTemplate.Domain/JwtHelper/GetClientIdToken.cs",
 
-                        "GenerateTemplate.Infra.CrossCuttings/Configuration/Authentication.cs",
+                        "GenerateTemplate.CrossCuttings/Configuration/Authentication.cs",
 
-                        "GenerateTemplate.Infra.Data/Repository/EfCore/AuthDaoEfCore.cs",
+                        "GenerateTemplate.Data/Repository/EfCore/AuthDaoEfCore.cs",
 
-                        "GenerateTemplate.Application.Test/AppService/v1/AuthAppServiceTest.cs",
-                        "GenerateTemplate.Application.Test/Controller/v1/AuthControllerTest.cs",
-                        "GenerateTemplate.Domain.Test/Services/v1/AuthServiceTest.cs"
+                        "GenerateTemplate.Test/GenerateTemplate.Application.Test/AppService/v1/AuthAppServiceTest.cs",
+                        "GenerateTemplate.Test/GenerateTemplate.Application.Test/Controller/v1/AuthControllerTest.cs",
+                        "GenerateTemplate.Test/GenerateTemplate.Domain.Test/Services/v1/AuthServiceTest.cs"
                     ]
                 },
 

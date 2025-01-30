@@ -9,13 +9,9 @@ public static class AppServiceDependencyInjection
 {
     public static void AppServiceDependencyInjectionModule(this IServiceCollection services)
     {
-    #if DEBUG 
+#if Authentication || DEBUG 
         services.AddScoped<IAuthAppService, AuthAppService>();
-    #elif Authentication
-        services.AddScoped<IAuthAppService, AuthAppService>();
-    #endif
-
-        services.AddScoped<IAuthAppService, AuthAppService>();
+#endif
 
         services.AddScoped<IGenerateTemplateAppServices, GenerateTemplateAppServices>();
     }
