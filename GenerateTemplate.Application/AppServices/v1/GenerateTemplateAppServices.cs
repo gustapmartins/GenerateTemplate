@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GenerateTemplate.Application.AppServices.v1.Interfaces;
+using GenerateTemplate.Domain.Entity;
 using GenerateTemplate.Domain.Interface.Services.v1;
 using System.Diagnostics.CodeAnalysis;
 
@@ -19,10 +20,8 @@ public class GenerateTemplateAppServices : IGenerateTemplateAppServices
         _generateTemplateService = generateTemplateService;
     }
 
-    public string GetAsync()
+    public async Task<OperationResult<string>> GetAsync()
     {
-        var result = _generateTemplateService.GetAsync();
-
-        return result;
+        return await _generateTemplateService.GetAsync();
     }
 }

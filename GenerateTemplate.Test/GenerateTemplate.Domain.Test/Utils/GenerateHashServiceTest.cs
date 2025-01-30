@@ -1,6 +1,8 @@
-﻿using GenerateTemplate.Domain.Entity.UserEntity;
-using GenerateTemplate.Domain.Interface.Utils;
+﻿using GenerateTemplate.Domain.Interface.Utils;
 using GenerateTemplate.Domain.Utils;
+#if Authentication || DEBUG
+using GenerateTemplate.Domain.Entity.UserEntity;
+#endif
 
 namespace GenerateTemplate.Domain.Test.Utils;
 
@@ -50,6 +52,7 @@ public class GenerateHashServiceTest
         Assert.True(result);
     }
 
+#if Authentication || DEBUG
     [Fact]
     public void GenerateToken_ShouldReturnValidJwtToken()
     {
@@ -76,4 +79,5 @@ public class GenerateHashServiceTest
         Assert.Equal("testuser@example.com", jwtToken.Claims.First(c => c.Type == "email").Value);
         Assert.Equal("1", jwtToken.Claims.First(c => c.Type == "id").Value);
     }
+#endif
 }

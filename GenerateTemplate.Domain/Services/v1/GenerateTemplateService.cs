@@ -1,3 +1,4 @@
+using GenerateTemplate.Domain.Entity;
 using GenerateTemplate.Domain.Interface.Services.v1;
 using Microsoft.Extensions.Configuration;
 
@@ -13,8 +14,23 @@ public class GenerateTemplateService : IGenerateTemplateService
         _configuration = configuration;
     }
 
-    public string GetAsync()
+    public async Task<OperationResult<string>> GetAsync()
     {
-       return "MetodoService";
+        return ResponseObject("Mensagem de retorno", "retorno", 200, true);
     }
+
+    #region Metodos privados 
+
+    private OperationResult<T> ResponseObject<T>(T content, string message, int statusCode, bool status)
+    {
+        return new OperationResult<T>()
+        {
+            Content = content,
+            Message = message,
+            StatusCode = statusCode,
+            Status = status
+        };
+    }
+
+    #endregion
 }

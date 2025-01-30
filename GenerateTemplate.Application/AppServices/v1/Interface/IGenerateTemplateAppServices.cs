@@ -1,6 +1,8 @@
-﻿namespace GenerateTemplate.Application.AppServices.v1.Interfaces;
+﻿using GenerateTemplate.Domain.Entity;
+
+namespace GenerateTemplate.Application.AppServices.v1.Interfaces;
 
 public interface IGenerateTemplateAppServices
 {
-    string GetAsync();
+    Task<OperationResult<string>> GetAsync();
 }

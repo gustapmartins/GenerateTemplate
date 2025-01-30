@@ -1,4 +1,7 @@
 using GenerateTemplate.Application.AppServices.v1;
+using GenerateTemplate.Domain.Entity;
+using GenerateTemplate.Domain.Interface.Services.v1;
+using GenerateTemplate.Domain.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,16 +14,19 @@ namespace GenerateTemplate.Application.Controllers.v1;
 [ProducesResponseType(StatusCodes.Status400BadRequest)]
 [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
 [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-public class GenerateTemplateController : ControllerBase
+public class GenerateTemplateController : BaseController
 {
 
     private readonly ILogger<GenerateTemplateController> _logger;
-    private readonly GenerateTemplateAppServices _appService;
+    private readonly GenerateTemplateAppServices _generateTemplateAppService;
 
-    public GenerateTemplateController(ILogger<GenerateTemplateController> logger, GenerateTemplateAppServices appService)
+    public GenerateTemplateController(
+        ILogger<GenerateTemplateController> logger, 
+        GenerateTemplateAppServices appService,
+        INotificationBase notificationBase) : base(notificationBase)
     {
         _logger = logger;
-        _appService = appService;
+        _generateTemplateAppService = appService;
     }
 
     /// <summary>
@@ -35,9 +41,15 @@ public class GenerateTemplateController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
-    public ActionResult GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        Ok();
-        throw new NotImplementedException();
+        OperationResult<string> result = await _generateTemplateAppService.GetAsync();
+
+        if (HasNotifications())
+            return ResponseResult(result);
+        if (result.Content is not null)
+            return Ok(result);
+        else
+            return NoContent();
     }
 }
