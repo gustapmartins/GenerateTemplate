@@ -1,10 +1,11 @@
-﻿using GenerateTemplate.Domain.Common;
-using GenerateTemplate.Domain.Entity;
+﻿#if Authentication || DEBUG
+using GenerateTemplate.Domain.Common;
 using GenerateTemplate.Domain.Entity.UserEntity;
-using GenerateTemplate.Domain.Interface.Utils;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+#endif
+using GenerateTemplate.Domain.Interface.Utils;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -61,6 +62,7 @@ public class GenerateHash : IGenerateHash
         return hashInputPassword == hashedPassword;
     }
 
+#if Authentication || DEBUG
     public string GenerateToken(UserModel userModel)
     {
         Claim[] claims =
@@ -87,4 +89,5 @@ public class GenerateHash : IGenerateHash
         return new JwtSecurityTokenHandler().WriteToken(token);
 
     }
+#endif
 }

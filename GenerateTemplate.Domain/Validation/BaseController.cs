@@ -19,7 +19,7 @@ public abstract class BaseController : ControllerBase
         return _notificationBase.HasNotifications();
     }
 
-    protected ActionResult<T> ResponseResult<T>(T Result)
+    protected ActionResult ResponseResult(Object Result)
     {
         return UnprocessableEntity(new
         {

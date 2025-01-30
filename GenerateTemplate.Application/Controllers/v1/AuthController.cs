@@ -177,6 +177,8 @@ public class AuthController : BaseController
     {
         OperationResult<string> result = await _authAppService.ResetPasswordAsync(passwordResetDto);
 
+        if (HasNotifications())
+            return ResponseResult(result);
         if (result is not null)
             return Ok(result);
         else

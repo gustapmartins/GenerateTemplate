@@ -10,10 +10,10 @@ public static class RepositoryDependencyInjectionModule
 {
     public static void RepositoryDependencyInjectionModuleModule(this IServiceCollection services)
     {
-        #if DEBUG
-           services.AddSingleton<IAuthDao, AuthDaoEfCore>();
-        #elif Authentication
-           services.AddSingleton<IAuthDao, AuthDaoEfCore>();
-        #endif
+    #if DEBUG 
+        services.AddSingleton<IAuthDao, AuthDaoEfCore>();
+    #elif Authentication
+        services.AddSingleton<IAuthDao, AuthDaoEfCore>();
+    #endif
     }
 }

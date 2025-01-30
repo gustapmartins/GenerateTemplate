@@ -20,7 +20,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    #if TEMPLATE_DEBUG
+    #if DEBUG
         app.UseSwagger();
         app.UseSwaggerUI();
     #elif EnableSwaggerSupport

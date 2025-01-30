@@ -13,11 +13,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Database__ConnectionString=mongodb://mongodb_container:27017 
       - ASPNETCORE_URLS=http://+:80
+      - EnableSwaggerSupport=true
+      - Authentication=true
     ports:
       - "8080:80"
     networks:
       - app_network
-
+      
   mongodb:
     image: mongo:latest
     restart: always
@@ -32,8 +34,6 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
-    volumes:
-      - ./dados:/data
     command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
     restart: always
     networks:
