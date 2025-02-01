@@ -27,7 +27,6 @@ jobs:
       - name: Run StyleCop
         run: dotnet build GenerateTemplate.sln /p:RunAnalyzersDuringBuild=true
 
-      - name: Setup .NET
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -37,7 +36,6 @@ jobs:
 
       - run: dotnet build GenerateTemplate.sln -c Release -o ./app/build
 
-      - name: Run Tests and Collect Coverage
       - run: dotnet test GenerateTemplate.sln --p:CollectCoverage=true --collect:"Xplat Code Coverage" --results-directory ./TestResults
 
       - name: Code Coverage Report
