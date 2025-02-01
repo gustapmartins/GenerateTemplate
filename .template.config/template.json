@@ -49,7 +49,7 @@
             "type": "parameter",
             "description": "Include authentication-related files",
             "datatype": "bool",
-            "defaultValue": "true"
+            "defaultValue": "false"
         },
         "GithubActions": {
             "type": "parameter",
