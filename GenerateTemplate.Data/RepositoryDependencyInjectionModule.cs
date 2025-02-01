@@ -1,10 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
-
-#if Authentication || DEBUG
 using GenerateTemplate.Domain.Interface.Dao;
 using GenerateTemplate.Infra.Data.Repository.EfCore;
-#endif
 
 namespace GenerateTemplate.Infra.Data;
 
@@ -16,5 +13,6 @@ public static class RepositoryDependencyInjectionModule
 #if Authentication || DEBUG
         services.AddSingleton<IAuthDao, AuthDaoEfCore>();
 #endif
+        services.AddSingleton<IGenerateTemplateDao, GenerateTemplateEfCore>();
     }
 }

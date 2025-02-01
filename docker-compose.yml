@@ -13,8 +13,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Database__ConnectionString=mongodb://mongodb_container:27017 
       - ASPNETCORE_URLS=http://+:80
-      - EnableSwaggerSupport=true
-      - Authentication=true
     ports:
       - "8080:80"
     networks:

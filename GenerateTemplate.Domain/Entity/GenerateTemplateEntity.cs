@@ -17,6 +17,13 @@ public class GenerateTemplateEntity : IEntity<string>
     public string Id { get; set; } = string.Empty;
 
     /// <summary>
+    /// Obtém ou define o ID do objeto.
+    /// </summary>
+    [BsonElement("Name")] // Atributo que indica que esta propriedade é o ID do documento no MongoDB
+    [BsonRepresentation(MongoDB.Bson.BsonType.String)] // Representação do tipo de dados ObjectId do MongoDB
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// Obtém ou define a data de criação do objeto.
     /// </summary>
     [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB

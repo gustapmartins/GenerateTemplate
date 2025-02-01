@@ -1,4 +1,6 @@
 using GenerateTemplate.Application.AppServices.v1;
+using GenerateTemplate.Application.AppServices.v1.Interfaces;
+using GenerateTemplate.Application.Dto.v1;
 using GenerateTemplate.Domain.Entity;
 using GenerateTemplate.Domain.Interface.Services.v1;
 using GenerateTemplate.Domain.Validation;
@@ -18,11 +20,11 @@ public class GenerateTemplateController : BaseController
 {
 
     private readonly ILogger<GenerateTemplateController> _logger;
-    private readonly GenerateTemplateAppServices _generateTemplateAppService;
+    private readonly IGenerateTemplateAppServices _generateTemplateAppService;
 
     public GenerateTemplateController(
-        ILogger<GenerateTemplateController> logger, 
-        GenerateTemplateAppServices appService,
+        ILogger<GenerateTemplateController> logger,
+        IGenerateTemplateAppServices appService,
         INotificationBase notificationBase) : base(notificationBase)
     {
         _logger = logger;
@@ -30,10 +32,8 @@ public class GenerateTemplateController : BaseController
     }
 
     /// <summary>
-    ///     Consultar todas as partidas criadas
+    ///   Consultar todos os elementos
     /// </summary>
-    /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
-    /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
     /// <response code="204">Caso a busca seja feita com sucesso</response>
@@ -41,9 +41,31 @@ public class GenerateTemplateController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
-    public async Task<ActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult> GetAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        OperationResult<string> result = await _generateTemplateAppService.GetAsync();
+        OperationResult<IEnumerable<GenerateTemplateResponse>> result = await _generateTemplateAppService.GetAsync(page, pageSize);
+
+        if (HasNotifications())
+            return ResponseResult(result);
+        if (result.Content is not null)
+            return Ok(result);
+        else
+            return NoContent();
+    }
+
+    /// <summary>
+    ///   Criar um novo elemento
+    /// </summary>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso a busca seja feita com sucesso</response>
+    /// <response code="204">Caso a busca seja feita com sucesso</response>
+    [HttpPost("Created")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
+    public async Task<ActionResult<GenerateTemplateResponse>> CreateAsync([FromBody] GenerateTemplateRequest generateTemplateRequest)
+    {
+        OperationResult<GenerateTemplateResponse> result = await _generateTemplateAppService.CreateAsync(generateTemplateRequest);
 
         if (HasNotifications())
             return ResponseResult(result);

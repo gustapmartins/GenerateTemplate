@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GenerateTemplate.Application.AppServices.v1.Interfaces;
+using GenerateTemplate.Application.Dto.v1;
 using GenerateTemplate.Domain.Entity;
 using GenerateTemplate.Domain.Interface.Services.v1;
 using System.Diagnostics.CodeAnalysis;
@@ -20,8 +21,19 @@ public class GenerateTemplateAppServices : IGenerateTemplateAppServices
         _generateTemplateService = generateTemplateService;
     }
 
-    public async Task<OperationResult<string>> GetAsync()
+    public async Task<OperationResult<IEnumerable<GenerateTemplateResponse>>> GetAsync(int page, int pageSize)
     {
-        return await _generateTemplateService.GetAsync();
+        OperationResult<IEnumerable<GenerateTemplateEntity>> result = await _generateTemplateService.GetAsync(page, pageSize);
+
+        return _mapper.Map<OperationResult<IEnumerable<GenerateTemplateResponse>>>(result);
+    }
+
+    public async Task<OperationResult<GenerateTemplateResponse>> CreateAsync(GenerateTemplateRequest generateTemplateResponse)
+    {
+        GenerateTemplateEntity GenerateTemplateMapper = _mapper.Map<GenerateTemplateEntity>(generateTemplateResponse);
+
+        OperationResult<GenerateTemplateEntity> result = await _generateTemplateService.CreateAsync(GenerateTemplateMapper);
+
+        return _mapper.Map<OperationResult<GenerateTemplateResponse>>(result);
     }
 }
