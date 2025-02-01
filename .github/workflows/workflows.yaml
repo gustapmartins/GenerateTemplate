@@ -35,6 +35,8 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore GenerateTemplate.sln
 
+      - run: dotnet build GenerateTemplate.sln -c Release -o ./app/build
+
       - name: Run Tests and Collect Coverage
       - run: dotnet test GenerateTemplate.sln --p:CollectCoverage=true --collect:"Xplat Code Coverage" --results-directory ./TestResults
 
