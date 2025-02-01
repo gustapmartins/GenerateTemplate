@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework Condition=" '$(TargetFramework)' == '' ">net8.0</TargetFramework>
-     <DefineConstants>$(DefineConstants);TEMPLATE_DEBUG</DefineConstants> 
+     <DefineConstants>$(DefineConstants);TEMPLATE_DEBUG</DefineConstants>
+	 <DefineConstants>$(DefineConstants);Authentication</DefineConstants>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
