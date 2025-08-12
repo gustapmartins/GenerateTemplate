@@ -18,7 +18,7 @@ ServiceDependencyInjection.ServiceDependencyInjectionModule(builder.Services);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("EnableSwaggerSupport"))
 {
     #if DEBUG
         app.UseSwagger();
@@ -28,8 +28,6 @@ if (app.Environment.IsDevelopment())
         app.UseSwaggerUI();
     #endif
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

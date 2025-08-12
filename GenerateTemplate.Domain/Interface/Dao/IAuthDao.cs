@@ -7,12 +7,12 @@ namespace GenerateTemplate.Domain.Interface.Dao;
 /// <summary>
 /// Interface for authentication data access object.
 /// </summary>
-public interface IAuthDao : BaseDao<UserModel>
+public interface IAuthDao : BaseDao<UserEntity>
 {
     /// <summary>
     /// Finds a user by their email.
     /// </summary>
     /// <param name="Email">The email of the user to find.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the user model.</returns>
-    Task<UserModel> FindEmailAsync(string Email);
+    Task<UserEntity> FindEmailAsync(string Email);
 }

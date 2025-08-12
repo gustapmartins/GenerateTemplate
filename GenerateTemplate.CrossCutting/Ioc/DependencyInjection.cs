@@ -26,7 +26,7 @@ public static class DependencyInjection
             return ConnectionMultiplexer.Connect(redisConnection);
         });
 
-        services.AddSingleton<IDatabase>(provider =>
+        services.AddSingleton(provider =>
         {
             var connection = provider.GetRequiredService<IConnectionMultiplexer>();
             return connection.GetDatabase();

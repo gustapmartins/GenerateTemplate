@@ -39,6 +39,6 @@ public interface IGenerateHash
     /// </summary>
     /// <param name="userModel">The hashed password to compare against.</param>
     /// <returns>True if the password matches the hashed password, otherwise false.</returns>
-    string GenerateToken(UserModel userModel);
+    string GenerateToken(UserEntity userModel);
 #endif
 }

@@ -11,13 +11,13 @@ public class UserMapper : Profile
 {
     public UserMapper()
     {
-        CreateMap<UserModel, CreateUserDto>();
-        CreateMap<UserModel, CreateUserDto>().ReverseMap();
-        CreateMap<LoginDto, UserModel>();
-        CreateMap<ViewUserDto, UserModel>();
-        CreateMap<UserModel, ViewUserDto>();
+        CreateMap<UserEntity, CreateUserDto>();
+        CreateMap<UserEntity, CreateUserDto>().ReverseMap();
+        CreateMap<LoginDto, UserEntity>();
+        CreateMap<ViewUserDto, UserEntity>();
+        CreateMap<UserEntity, ViewUserDto>();
         CreateMap<PasswordResetDto, PasswordReset>().ReverseMap();
-        CreateMap<UpdateUserDto, UserModel>().ReverseMap();
+        CreateMap<UpdateUserDto, UserEntity>().ReverseMap();
 
         CreateMap(typeof(OperationResult<>), typeof(OperationResult<>));
     }

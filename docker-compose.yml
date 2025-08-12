@@ -3,7 +3,7 @@ services:
     image: ${DOCKER_REGISTRY-}generatetemplateapplication
     build:
       context: .
-      dockerfile: GenerateTemplate.Application/Dockerfile
+      dockerfile: Dockerfile
     container_name: generatetempla_application
     restart: always
     depends_on:
@@ -13,6 +13,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Database__ConnectionString=mongodb://mongodb_container:27017 
       - ASPNETCORE_URLS=http://+:80
+      - EnableSwaggerSupport=true
+      - Redis__ConnectionString=redis:6379
     ports:
       - "8080:80"
     networks:

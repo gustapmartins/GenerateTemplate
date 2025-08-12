@@ -21,7 +21,7 @@ RUN dotnet restore "GenerateTemplate.Application/GenerateTemplate.Application.cs
 
 COPY . .
 WORKDIR "/src/GenerateTemplate.Application"
-RUN dotnet build "GenerateTemplate.Application.csproj" -c Release -o /app/build 
+RUN ["dotnet", "build", "GenerateTemplate.Application.csproj", "-c", "Release", "-o", "/app/build", "-p:DefineConstants=\"Authentication;EnableSwaggerSupport\""]
 
 # Esta fase é usada na produção ou quando executada no VS no modo normal
 FROM build AS final
@@ -29,4 +29,4 @@ WORKDIR /app
 COPY --from=build /app/build .
 EXPOSE 80
 
-ENTRYPOINT ["dotnet", "GenerateTemplate.Application.dll", "--urls", "http://+:443;http://*:80"]
+ENTRYPOINT ["dotnet", "GenerateTemplate.Application.dll", "--urls", "http://+:80"]

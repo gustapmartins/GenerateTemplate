@@ -63,7 +63,7 @@ public class GenerateHash : IGenerateHash
     }
 
 #if Authentication || DEBUG
-    public string GenerateToken(UserModel userModel)
+    public string GenerateToken(UserEntity userModel)
     {
         Claim[] claims =
         [

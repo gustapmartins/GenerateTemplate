@@ -32,10 +32,10 @@ public class AuthAppServiceTest
         // Arrange
         var users = _fixture.Create<OperationResult<string>>();
 
-        _mapperMock.Setup(mapper => mapper.Map<UserModel>(It.IsAny<UserModel>()))
-            .Returns(_fixture.Create<UserModel>());
+        _mapperMock.Setup(mapper => mapper.Map<UserEntity>(It.IsAny<UserEntity>()))
+            .Returns(_fixture.Create<UserEntity>());
 
-        _authServiceMock.Setup(service => service.LoginAsync(It.IsAny<UserModel>()))
+        _authServiceMock.Setup(service => service.LoginAsync(It.IsAny<UserEntity>()))
             .ReturnsAsync(users);
 
         // Act
@@ -45,8 +45,8 @@ public class AuthAppServiceTest
         Assert.NotNull(result);
         Assert.Equal(users.Content, result.Content);
 
-        _mapperMock.Verify(dao => dao.Map<UserModel>(It.IsAny<UserModel>()), Times.Once);
-        _authServiceMock.Verify(dao => dao.LoginAsync(It.IsAny<UserModel>()), Times.Once);
+        _mapperMock.Verify(dao => dao.Map<UserEntity>(It.IsAny<UserEntity>()), Times.Once);
+        _authServiceMock.Verify(dao => dao.LoginAsync(It.IsAny<UserEntity>()), Times.Once);
     }
 
     [Fact]
@@ -65,13 +65,13 @@ public class AuthAppServiceTest
         var createUserDto = _fixture.Create<CreateUserDto>(); // Generate the DTO instance
         var mapperCreatedUserDto = new OperationResult<CreateUserDto> { Content = createUserDto }; // Simulate the response from service
 
-        _mapperMock.Setup(mapper => mapper.Map<UserModel>(It.IsAny<CreateUserDto>()))
-            .Returns(_fixture.Create<UserModel>());
+        _mapperMock.Setup(mapper => mapper.Map<UserEntity>(It.IsAny<CreateUserDto>()))
+            .Returns(_fixture.Create<UserEntity>());
 
-        _authServiceMock.Setup(service => service.CreateAsync(It.IsAny<UserModel>()))
-            .ReturnsAsync(_fixture.Create<OperationResult<UserModel>>());
+        _authServiceMock.Setup(service => service.CreateAsync(It.IsAny<UserEntity>()))
+            .ReturnsAsync(_fixture.Create<OperationResult<UserEntity>>());
 
-        _mapperMock.Setup(mapper => mapper.Map<OperationResult<CreateUserDto>>(It.IsAny<OperationResult<UserModel>>()))
+        _mapperMock.Setup(mapper => mapper.Map<OperationResult<CreateUserDto>>(It.IsAny<OperationResult<UserEntity>>()))
             .Returns(mapperCreatedUserDto);
 
         // Act
@@ -81,9 +81,9 @@ public class AuthAppServiceTest
         Assert.NotNull(result);
         Assert.Equal(mapperCreatedUserDto.Content, result.Content);
 
-        _authServiceMock.Verify(dao => dao.CreateAsync(It.IsAny<UserModel>()), Times.Once);
-        _mapperMock.Verify(dao => dao.Map<UserModel>(It.IsAny<CreateUserDto>()), Times.Once);
-        _mapperMock.Verify(dao => dao.Map<OperationResult<CreateUserDto>>(It.IsAny<OperationResult<UserModel>>()), Times.Once);
+        _authServiceMock.Verify(dao => dao.CreateAsync(It.IsAny<UserEntity>()), Times.Once);
+        _mapperMock.Verify(dao => dao.Map<UserEntity>(It.IsAny<CreateUserDto>()), Times.Once);
+        _mapperMock.Verify(dao => dao.Map<OperationResult<CreateUserDto>>(It.IsAny<OperationResult<UserEntity>>()), Times.Once);
     }
 
     [Fact]
@@ -94,9 +94,9 @@ public class AuthAppServiceTest
         var mapperGetAsync = _fixture.Create<OperationResult<IEnumerable<ViewUserDto>>>(); // Simulate the response from service
 
         _authServiceMock.Setup(service => service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()))
-            .ReturnsAsync(_fixture.Create<OperationResult<IEnumerable<UserModel>>>());
+            .ReturnsAsync(_fixture.Create<OperationResult<IEnumerable<UserEntity>>>());
 
-        _mapperMock.Setup(mapper => mapper.Map<OperationResult<IEnumerable<ViewUserDto>>>(It.IsAny<OperationResult<IEnumerable<UserModel>>>()))
+        _mapperMock.Setup(mapper => mapper.Map<OperationResult<IEnumerable<ViewUserDto>>>(It.IsAny<OperationResult<IEnumerable<UserEntity>>>()))
             .Returns(mapperGetAsync);
 
         // Act
@@ -116,9 +116,9 @@ public class AuthAppServiceTest
         var mapperGetAllAsync = _fixture.Create<OperationResult<ViewUserDto>>(); // Simulate the response from service
 
         _authServiceMock.Setup(service => service.GetIdAsync(It.IsAny<string>()))
-            .ReturnsAsync(_fixture.Create<OperationResult<UserModel>>());
+            .ReturnsAsync(_fixture.Create<OperationResult<UserEntity>>());
 
-        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserModel>>()))
+        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserEntity>>()))
             .Returns(mapperGetAllAsync);
 
         // Act
@@ -138,9 +138,9 @@ public class AuthAppServiceTest
         var mapperRemoveAsync = _fixture.Create<OperationResult<ViewUserDto>>(); // Simulate the response from service
 
         _authServiceMock.Setup(service => service.RemoveAsync(It.IsAny<string>()))
-            .ReturnsAsync(_fixture.Create<OperationResult<UserModel>>());
+            .ReturnsAsync(_fixture.Create<OperationResult<UserEntity>>());
 
-        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserModel>>()))
+        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserEntity>>()))
             .Returns(mapperRemoveAsync);
 
         // Act
@@ -159,13 +159,13 @@ public class AuthAppServiceTest
         // Arrange
         var mapperRemoveAsync = _fixture.Create<OperationResult<ViewUserDto>>(); // Simulate the response from service
 
-        _mapperMock.Setup(mapper => mapper.Map<UserModel>(It.IsAny<UpdateUserDto>()))
-          .Returns(_fixture.Create<UserModel>());
+        _mapperMock.Setup(mapper => mapper.Map<UserEntity>(It.IsAny<UpdateUserDto>()))
+          .Returns(_fixture.Create<UserEntity>());
 
-        _authServiceMock.Setup(service => service.UpdateAsync(It.IsAny<string>(), It.IsAny<UserModel>()))
-            .ReturnsAsync(_fixture.Create<OperationResult<UserModel>>());
+        _authServiceMock.Setup(service => service.UpdateAsync(It.IsAny<string>(), It.IsAny<UserEntity>()))
+            .ReturnsAsync(_fixture.Create<OperationResult<UserEntity>>());
 
-        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserModel>>()))
+        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserEntity>>()))
             .Returns(mapperRemoveAsync);
 
         // Act
@@ -176,7 +176,7 @@ public class AuthAppServiceTest
 
 
         _authServiceMock.Verify(dao => dao.RemoveAsync(It.IsAny<string>()), Times.Once);
-        _mapperMock.Verify(dao => dao.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserModel>>()), Times.Once);
+        _mapperMock.Verify(dao => dao.Map<OperationResult<ViewUserDto>>(It.IsAny<OperationResult<UserEntity>>()), Times.Once);
     }
 
     [Fact]

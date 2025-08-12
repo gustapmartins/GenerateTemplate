@@ -64,7 +64,7 @@ public class AuthControllerTest
         _authAppServiceMock.Setup(service => service.GetIdAsync(It.IsAny<string>()))
             .ReturnsAsync(User);
 
-        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<UserModel>()))
+        _mapperMock.Setup(mapper => mapper.Map<OperationResult<ViewUserDto>>(It.IsAny<UserEntity>()))
             .Returns(userViewDto);
 
         // Act
@@ -82,7 +82,7 @@ public class AuthControllerTest
     public async Task loginasync_whencalled_returnsokresultwithtokenAsync()
     {
         // arrange
-        var usermodel = _fixture.Create<UserModel>();
+        var usermodel = _fixture.Create<UserEntity>();
         var token = _fixture.Create<OperationResult<string>>();
 
         _authAppServiceMock.Setup(service => service.LoginAsync(It.IsAny<LoginDto>()))
