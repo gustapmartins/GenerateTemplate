@@ -14,9 +14,4 @@ public class GenerateTemplateEfCore : BaseContext<GenerateTemplateEntity>, IGene
     {
         _AuthCollection = Collection;
     }
-
-    public Task<GenerateTemplateEntity> FindEmailAsync(string Email)
-    {
-        throw new NotImplementedException();
-    }
 }

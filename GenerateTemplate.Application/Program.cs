@@ -29,11 +29,10 @@ if (app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("Ena
     #endif
 }
 
-app.UseAuthentication();
-
-app.UseAuthorization();
-
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 

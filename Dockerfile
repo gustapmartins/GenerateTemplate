@@ -1,10 +1,7 @@
 # Base Image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
-
-ENV ASPNETCORE_URLS=http://+:80
-ENV ASPNETCORE_ENVIRONMENT=Development
+EXPOSE 8080
 
 # Build Image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -27,6 +24,5 @@ RUN ["dotnet", "build", "GenerateTemplate.Application.csproj", "-c", "Release", 
 FROM build AS final
 WORKDIR /app
 COPY --from=build /app/build .
-EXPOSE 80
 
-ENTRYPOINT ["dotnet", "GenerateTemplate.Application.dll", "--urls", "http://+:80"]
+ENTRYPOINT ["dotnet", "GenerateTemplate.Application.dll", "--urls"]

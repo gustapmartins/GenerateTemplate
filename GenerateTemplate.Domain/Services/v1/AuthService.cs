@@ -51,10 +51,8 @@ public class AuthService : IAuthService
             IEnumerable<UserEntity> GetAll = await _authDao.GetAllAsync(page, pageSize,
                 filter: Builders<UserEntity>.Filter.Where(x => x.AccountStatus == AccountStatus.Active));
 
-            if (GetAll.Count() == 0)
-            {
+            if (GetAll.Any())
                 return ResponseObject(GetAll, "Não há usuários cadastrados.", StatusCodes.Status404NotFound, false);
-            }
 
             return ResponseObject(GetAll, "Usuários encontrados.", StatusCodes.Status200OK, true);
         }
@@ -71,9 +69,7 @@ public class AuthService : IAuthService
             var GetUserCacheId = await _redisService.GetAsync<UserEntity>(Id);
 
             if (GetUserCacheId is not null)
-            {
                 return ResponseObject(GetUserCacheId, "Usuário encontrado.", StatusCodes.Status200OK, false);
-            }
 
             UserEntity GetUserAsyncId = await _authDao.GetIdAsync(Id);
 
@@ -106,9 +102,7 @@ public class AuthService : IAuthService
             UserEntity findEmail = await _authDao.FindEmailAsync(addObject.Email);
 
             if (findEmail != null)
-            {
                 return ResponseObject<UserEntity>(default!, $"Usuário com esse email: '{addObject.Email}', já existe.", StatusCodes.Status409Conflict, false);
-            }
 
             addObject.Password = _generateHash.GenerateHashParameters(addObject.Password);
             addObject.AccountStatus = AccountStatus.Active;
@@ -131,17 +125,13 @@ public class AuthService : IAuthService
             UserEntity findUser = await _authDao.FindEmailAsync(userLogin.Email);
 
             if (findUser == null)
-            {
                 return ResponseObject<string>(default!, $"Este email: {userLogin.Email} não existe.", StatusCodes.Status409Conflict, false);
-            }
 
             //Faz uma validação para verificar se a senha que o usuariop está passando corresponde a senha salva no banco, em formato hash
             bool isPasswordCorrect = _generateHash.VerifyPassword(userLogin.Password, findUser.Password);
 
             if (!isPasswordCorrect)
-            {
                 return ResponseObject<string>(default!, $"Senha incorreta.", StatusCodes.Status400BadRequest, false);
-            }
 
             //Gera um token a partir do usuario buscado pelo E-mail
             string token = _generateHash.GenerateToken(findUser);
@@ -165,7 +155,7 @@ public class AuthService : IAuthService
 
             var updateFields = new Dictionary<string, object>
             {
-                { nameof(AccountStatus), AccountStatus.Blocked },
+                { nameof(AccountStatus), AccountStatus.Blocked }
             };
 
             UserEntity updateUser = await _authDao.UpdateAsync(Id, updateFields);
@@ -185,9 +175,7 @@ public class AuthService : IAuthService
             UserEntity findEmail = await _authDao.FindEmailAsync(email);
 
             if (findEmail == null)
-            {
                 return ResponseObject<string>(default!, $"Este E-mail: {email} não é válido", StatusCodes.Status404NotFound, false);
-            }
 
             string token = _generateHash.GenerateRandomNumber().ToString();
 
@@ -256,9 +244,7 @@ public class AuthService : IAuthService
             UserEntity user = await _authDao.GetIdAsync(clientId);
 
             if (user == null)
-            {
                 return ResponseObject<string>(default!, $"Este clientId: {clientId} não é válido", StatusCodes.Status204NoContent, false);
-            }
 
             var updateFields = new Dictionary<string, object>
             {
@@ -282,9 +268,7 @@ public class AuthService : IAuthService
             UserEntity passwordResetCache = _memoryCacheService.GetCache<UserEntity>(token);
 
             if (passwordResetCache == null)
-            {
                 return ResponseObject<string>(default!, "Este token está expirado", StatusCodes.Status204NoContent, false);
-            }
 
             string generateToken = _generateHash.GenerateToken(passwordResetCache);
 
