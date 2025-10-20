@@ -51,7 +51,7 @@ public class AuthService : IAuthService
             IEnumerable<UserEntity> GetAll = await _authDao.GetAllAsync(page, pageSize,
                 filter: Builders<UserEntity>.Filter.Where(x => x.AccountStatus == AccountStatus.Active));
 
-            if (GetAll.Any())
+            if (!GetAll.Any())
                 return ResponseObject(GetAll, "Não há usuários cadastrados.", StatusCodes.Status404NotFound, false);
 
             return ResponseObject(GetAll, "Usuários encontrados.", StatusCodes.Status200OK, true);

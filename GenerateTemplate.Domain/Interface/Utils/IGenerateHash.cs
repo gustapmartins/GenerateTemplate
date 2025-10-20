@@ -25,6 +25,7 @@ public interface IGenerateHash
     /// <returns>The hashed password.</returns>
     string GenerateHashParameters(string password);
 
+#if Authentication || DEBUG
     /// <summary>
     /// Verifies if the given password matches the hashed password.
     /// </summary>
@@ -33,7 +34,6 @@ public interface IGenerateHash
     /// <returns>True if the password matches the hashed password, otherwise false.</returns>
     bool VerifyPassword(string password, string hashedPassword);
 
-#if Authentication || DEBUG
     /// <summary>
     /// Verifies if the given password matches the hashed password.
     /// </summary>

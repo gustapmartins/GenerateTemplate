@@ -51,6 +51,8 @@ public class GenerateHash : IGenerateHash
         }
     }
 
+#if Authentication || DEBUG
+
     public bool VerifyPassword(string password, string hashedPassword)
     {
         // Gera o hash da senha fornecida pelo usuário
@@ -62,7 +64,6 @@ public class GenerateHash : IGenerateHash
         return hashInputPassword == hashedPassword;
     }
 
-#if Authentication || DEBUG
     public string GenerateToken(UserEntity userModel)
     {
         Claim[] claims =
