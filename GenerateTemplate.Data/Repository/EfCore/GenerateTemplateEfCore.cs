@@ -6,17 +6,12 @@ using MongoDB.Driver;
 
 namespace GenerateTemplate.Infra.Data.Repository.EfCore;
 
-public class GenerateTemplateEfCore : BaseContext<GenerateTemplateEntity>, IGenerateTemplateDao
+public class GenerateTemplateEfCore : BaseMongoDbContext<GenerateTemplateEntity>, IGenerateTemplateDao
 {
     private readonly IMongoCollection<GenerateTemplateEntity> _AuthCollection;
 
     public GenerateTemplateEfCore(IOptions<DatabaseSettings> options) : base(options, "GenerateTemplateCollection")
     {
         _AuthCollection = Collection;
-    }
-
-    public Task<GenerateTemplateEntity> FindEmailAsync(string Email)
-    {
-        throw new NotImplementedException();
     }
 }

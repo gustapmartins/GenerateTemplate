@@ -8,7 +8,7 @@ namespace GenerateTemplate.Domain.Entity.UserEntity;
 /// Representa um usuário no sistema.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public class UserModel : IEntity<string>
+public class UserEntity : IEntity<string>
 {
     /// <summary>
     /// Obtém ou define o ID do usuário.

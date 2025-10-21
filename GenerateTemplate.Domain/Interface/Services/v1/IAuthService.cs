@@ -14,28 +14,28 @@ public interface IAuthService
     /// <param name="page">The page number.</param>
     /// <param name="pageSize">The size of the page.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of users.</returns>
-    Task<OperationResult<IEnumerable<UserModel>>> GetAllAsync(int page, int pageSize);
+    Task<OperationResult<IEnumerable<UserEntity>>> GetAllAsync(int page, int pageSize);
 
     /// <summary>
     /// Gets a user by ID.
     /// </summary>
     /// <param name="Id">The user ID.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the user.</returns>
-    Task<OperationResult<UserModel>> GetIdAsync(string Id);
+    Task<OperationResult<UserEntity>> GetIdAsync(string Id);
 
     /// <summary>
     /// Creates a new user.
     /// </summary>
     /// <param name="addObject">The user to add.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the created user.</returns>
-    Task<OperationResult<UserModel>> CreateAsync(UserModel addObject);
+    Task<OperationResult<UserEntity>> CreateAsync(UserEntity addObject);
 
     /// <summary>
     /// Removes a user by ID.
     /// </summary>
     /// <param name="Id">The user ID.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the removed user.</returns>
-    Task<OperationResult<UserModel>> RemoveAsync(string Id);
+    Task<OperationResult<UserEntity>> RemoveAsync(string Id);
 
     /// <summary>
     /// Updates a user by ID.
@@ -43,14 +43,14 @@ public interface IAuthService
     /// <param name="Id">The user ID.</param>
     /// <param name="updateObject">The user to update.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the updated user.</returns>
-    Task<OperationResult<UserModel>> UpdateAsync(string Id, UserModel updateObject);
+    Task<OperationResult<UserEntity>> UpdateAsync(string Id, UserEntity updateObject);
 
     /// <summary>
     /// Logs in a user.
     /// </summary>
     /// <param name="userLogin">The user login details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the login token.</returns>
-    Task<OperationResult<string>> LoginAsync(UserModel userLogin);
+    Task<OperationResult<string>> LoginAsync(UserEntity userLogin);
 
     /// <summary>
     /// Sends a forget password email.

@@ -44,43 +44,39 @@ public class AuthService : IAuthService
         _notificationBase = notificationBase;
     }
 
-    public async Task<OperationResult<IEnumerable<UserModel>>> GetAllAsync(int page, int pageSize)
+    public async Task<OperationResult<IEnumerable<UserEntity>>> GetAllAsync(int page, int pageSize)
     {
         try
         {
-            IEnumerable<UserModel> GetAll = await _authDao.GetAllAsync(page, pageSize,
-                filter: Builders<UserModel>.Filter.Where(x => x.AccountStatus == AccountStatus.Active));
+            IEnumerable<UserEntity> GetAll = await _authDao.GetAllAsync(page, pageSize,
+                filter: Builders<UserEntity>.Filter.Where(x => x.AccountStatus == AccountStatus.Active));
 
-            if (GetAll.Count() == 0)
-            {
+            if (!GetAll.Any())
                 return ResponseObject(GetAll, "Não há usuários cadastrados.", StatusCodes.Status404NotFound, false);
-            }
 
             return ResponseObject(GetAll, "Usuários encontrados.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return ResponseObject(Enumerable.Empty<UserModel>(), ex.Message, StatusCodes.Status500InternalServerError, false);
+            return ResponseObject(Enumerable.Empty<UserEntity>(), ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
-    public async Task<OperationResult<UserModel>> GetIdAsync(string Id)
+    public async Task<OperationResult<UserEntity>> GetIdAsync(string Id)
     {
         try
         {
-            var GetUserCacheId = await _redisService.GetAsync<UserModel>(Id);
+            var GetUserCacheId = await _redisService.GetAsync<UserEntity>(Id);
 
             if (GetUserCacheId is not null)
-            {
                 return ResponseObject(GetUserCacheId, "Usuário encontrado.", StatusCodes.Status200OK, false);
-            }
 
-            UserModel GetUserAsyncId = await _authDao.GetIdAsync(Id);
+            UserEntity GetUserAsyncId = await _authDao.GetIdAsync(Id);
 
             if (GetUserAsyncId is null)
             {
                 await _notificationBase.NotifyAsync("Usuário não encontrado.", $"Usuário com id: {Id} não existe.");
-                return ResponseObject<UserModel>(GetUserAsyncId, $"Usuário com id: {Id} não existe.", StatusCodes.Status204NoContent, false);
+                return ResponseObject<UserEntity>(GetUserAsyncId, $"Usuário com id: {Id} não existe.", StatusCodes.Status204NoContent, false);
             }
 
             if (GetUserAsyncId.AccountStatus == 0)
@@ -95,20 +91,18 @@ public class AuthService : IAuthService
         catch (ExceptionFilter ex)
         {
             await _notificationBase.NotifyAsync("Error internal", ex.Message);
-            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
+            return ResponseObject<UserEntity>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
-    public async Task<OperationResult<UserModel>> CreateAsync(UserModel addObject)
+    public async Task<OperationResult<UserEntity>> CreateAsync(UserEntity addObject)
     {
         try
         {
-            UserModel findEmail = await _authDao.FindEmailAsync(addObject.Email);
+            UserEntity findEmail = await _authDao.FindEmailAsync(addObject.Email);
 
             if (findEmail != null)
-            {
-                return ResponseObject<UserModel>(default!, $"Usuário com esse email: '{addObject.Email}', já existe.", StatusCodes.Status409Conflict, false);
-            }
+                return ResponseObject<UserEntity>(default!, $"Usuário com esse email: '{addObject.Email}', já existe.", StatusCodes.Status409Conflict, false);
 
             addObject.Password = _generateHash.GenerateHashParameters(addObject.Password);
             addObject.AccountStatus = AccountStatus.Active;
@@ -120,28 +114,24 @@ public class AuthService : IAuthService
         }
         catch (ExceptionFilter ex)
         {
-            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
+            return ResponseObject<UserEntity>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
-    public async Task<OperationResult<string>> LoginAsync(UserModel userLogin)
+    public async Task<OperationResult<string>> LoginAsync(UserEntity userLogin)
     {
         try
         {
-            UserModel findUser = await _authDao.FindEmailAsync(userLogin.Email);
+            UserEntity findUser = await _authDao.FindEmailAsync(userLogin.Email);
 
             if (findUser == null)
-            {
                 return ResponseObject<string>(default!, $"Este email: {userLogin.Email} não existe.", StatusCodes.Status409Conflict, false);
-            }
 
             //Faz uma validação para verificar se a senha que o usuariop está passando corresponde a senha salva no banco, em formato hash
             bool isPasswordCorrect = _generateHash.VerifyPassword(userLogin.Password, findUser.Password);
 
             if (!isPasswordCorrect)
-            {
                 return ResponseObject<string>(default!, $"Senha incorreta.", StatusCodes.Status400BadRequest, false);
-            }
 
             //Gera um token a partir do usuario buscado pelo E-mail
             string token = _generateHash.GenerateToken(findUser);
@@ -154,27 +144,27 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<OperationResult<UserModel>> RemoveAsync(string Id)
+    public async Task<OperationResult<UserEntity>> RemoveAsync(string Id)
     {
         try
         {
-            OperationResult<UserModel> userView = await GetIdAsync(Id);
+            OperationResult<UserEntity> userView = await GetIdAsync(Id);
 
             if (userView.Content == null)
                 return ResponseObject(userView.Content!, userView.Message, userView.StatusCode, userView.Status);
 
             var updateFields = new Dictionary<string, object>
             {
-                { nameof(AccountStatus), AccountStatus.Blocked },
+                { nameof(AccountStatus), AccountStatus.Blocked }
             };
 
-            UserModel updateUser = await _authDao.UpdateAsync(Id, updateFields);
+            UserEntity updateUser = await _authDao.UpdateAsync(Id, updateFields);
 
             return ResponseObject(updateUser, "Usuário bloqueado.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
+            return ResponseObject<UserEntity>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -182,12 +172,10 @@ public class AuthService : IAuthService
     {
         try
         {
-            UserModel findEmail = await _authDao.FindEmailAsync(email);
+            UserEntity findEmail = await _authDao.FindEmailAsync(email);
 
             if (findEmail == null)
-            {
                 return ResponseObject<string>(default!, $"Este E-mail: {email} não é válido", StatusCodes.Status404NotFound, false);
-            }
 
             string token = _generateHash.GenerateRandomNumber().ToString();
 
@@ -205,7 +193,7 @@ public class AuthService : IAuthService
                 </div>";
 
             await _emailService.SendMailAsync(
-                  "no-reply@yourdomain.com", // Use a valid email address here
+                  "no-reply@yourdomain.com",
                   email,
                   "Redefinição da sua senha",
                   emailBody
@@ -213,7 +201,7 @@ public class AuthService : IAuthService
 
             _memoryCacheService.AddToCache(token, findEmail, 5);
 
-            return ResponseObject<string>(token, $"Email enviado com sucesso!", StatusCodes.Status200OK, true);
+            return ResponseObject(token, $"Email enviado com sucesso!", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
@@ -221,11 +209,11 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<OperationResult<UserModel>> UpdateAsync(string Id, UserModel updateObject)
+    public async Task<OperationResult<UserEntity>> UpdateAsync(string Id, UserEntity updateObject)
     {
         try
         {
-            OperationResult<UserModel> userView = await GetIdAsync(Id);
+            OperationResult<UserEntity> userView = await GetIdAsync(Id);
 
             if (userView.Content == null)
                 return ResponseObject(userView.Content!, userView.Message, userView.StatusCode, userView.Status);
@@ -237,13 +225,13 @@ public class AuthService : IAuthService
                 { nameof(updateObject.AccountStatus), updateObject.AccountStatus }
             };
 
-            UserModel userUpdate = await _authDao.UpdateAsync(Id, updateFields);
+            UserEntity userUpdate = await _authDao.UpdateAsync(Id, updateFields);
 
             return ResponseObject(userUpdate, "Usuário atualizado com sucesso.", StatusCodes.Status200OK, true);
         }
         catch (ExceptionFilter ex)
         {
-            return ResponseObject<UserModel>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
+            return ResponseObject<UserEntity>(default!, ex.Message, StatusCodes.Status500InternalServerError, false);
         }
     }
 
@@ -253,19 +241,17 @@ public class AuthService : IAuthService
         {
             string clientId = _getClientIdToken.GetClientIdFromToken(_httpContext);
 
-            UserModel user = await _authDao.GetIdAsync(clientId);
+            UserEntity user = await _authDao.GetIdAsync(clientId);
 
             if (user == null)
-            {
                 return ResponseObject<string>(default!, $"Este clientId: {clientId} não é válido", StatusCodes.Status204NoContent, false);
-            }
 
             var updateFields = new Dictionary<string, object>
             {
                 { nameof(passwordReset.Password), _generateHash.GenerateHashParameters(passwordReset.Password) },
             };
 
-            UserModel updatePassword = await _authDao.UpdateAsync(user.Id, updateFields);
+            UserEntity updatePassword = await _authDao.UpdateAsync(user.Id, updateFields);
 
             return ResponseObject<string>(default!, "Senha Redefinida", StatusCodes.Status200OK, true);
         }
@@ -279,12 +265,10 @@ public class AuthService : IAuthService
     {
         try
         {
-            UserModel passwordResetCache = _memoryCacheService.GetCache<UserModel>(token);
+            UserEntity passwordResetCache = _memoryCacheService.GetCache<UserEntity>(token);
 
             if (passwordResetCache == null)
-            {
                 return ResponseObject<string>(default!, "Este token está expirado", StatusCodes.Status204NoContent, false);
-            }
 
             string generateToken = _generateHash.GenerateToken(passwordResetCache);
 

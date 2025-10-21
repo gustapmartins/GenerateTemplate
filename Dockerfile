@@ -1,10 +1,7 @@
 # Base Image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
-
-ENV ASPNETCORE_URLS=http://+:80
-ENV ASPNETCORE_ENVIRONMENT=Development
+EXPOSE 8080
 
 # Build Image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -21,12 +18,11 @@ RUN dotnet restore "GenerateTemplate.Application/GenerateTemplate.Application.cs
 
 COPY . .
 WORKDIR "/src/GenerateTemplate.Application"
-RUN dotnet build "GenerateTemplate.Application.csproj" -c Release -o /app/build 
+RUN ["dotnet", "build", "GenerateTemplate.Application.csproj", "-c", "Release", "-o", "/app/build", "-p:DefineConstants=\"Authentication;EnableSwaggerSupport\""]
 
 # Esta fase é usada na produção ou quando executada no VS no modo normal
 FROM build AS final
 WORKDIR /app
 COPY --from=build /app/build .
-EXPOSE 80
 
-ENTRYPOINT ["dotnet", "GenerateTemplate.Application.dll", "--urls", "http://+:443;http://*:80"]
+ENTRYPOINT ["dotnet", "GenerateTemplate.Application.dll", "--urls"]

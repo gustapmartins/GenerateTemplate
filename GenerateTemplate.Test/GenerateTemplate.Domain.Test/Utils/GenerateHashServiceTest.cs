@@ -57,7 +57,7 @@ public class GenerateHashServiceTest
     public void GenerateToken_ShouldReturnValidJwtToken()
     {
         // Arrange
-        var userModel = new UserModel
+        var userModel = new UserEntity
         {
             UserName = "testuser",
             Email = "testuser@example.com",

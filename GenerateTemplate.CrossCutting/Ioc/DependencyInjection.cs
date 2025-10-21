@@ -17,8 +17,7 @@ public static class DependencyInjection
 {
     public static void ConfigureService(this IServiceCollection services, IConfiguration configuration, string xmlFileName)
     {
-        services.Configure<DatabaseSettings>
-            (configuration.GetSection("Database"));
+        services.Configure<DatabaseSettings>(configuration.GetSection("Database"));
 
         services.AddSingleton<IConnectionMultiplexer>(provider =>
         {
@@ -26,7 +25,7 @@ public static class DependencyInjection
             return ConnectionMultiplexer.Connect(redisConnection);
         });
 
-        services.AddSingleton<IDatabase>(provider =>
+        services.AddSingleton(provider =>
         {
             var connection = provider.GetRequiredService<IConnectionMultiplexer>();
             return connection.GetDatabase();

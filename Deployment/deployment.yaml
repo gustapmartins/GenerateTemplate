@@ -1,0 +1,89 @@
+# 1. Deployment e Service da sua aplicação
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generate-templateapplication
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: generate-templateapplication
+  template:
+    metadata:
+      labels:
+        app: generate-templateapplication
+    spec:
+      containers:
+      - name: generate-templateapplication
+        image: generatetemplateapplication:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        - name: ASPNETCORE_URLS
+          value: "http://+:8080"
+        - name: Redis__ConnectionString
+          value: "redis-service:6379"
+        - name: Database__ConnectionString
+          value: "mongodb://mongodb-service:27017"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: generate-templateapplication
+spec:
+  selector:
+    app: generate-templateapplication
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+---
+# 2. Service e Endpoints para o Redis EXTERNO
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: redis-service
+subsets:
+  - addresses:
+      - ip: "192.168.15.99"
+    ports:
+      - port: 6379
+
+---
+# 3. Service e Endpoints para o MongoDB EXTERNO
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: mongodb-service
+subsets:
+  - addresses:
+      - ip: "192.168.15.1"
+    ports:
+      - port: 27017

@@ -20,29 +20,29 @@ public class AuthAppService : IAuthAppService
     
     public async Task<OperationResult<IEnumerable<ViewUserDto>>> GetAsync(int page, int pageSize)
     {
-        OperationResult<IEnumerable<UserModel>> result = await _authService.GetAllAsync(page, pageSize);
+        OperationResult<IEnumerable<UserEntity>> result = await _authService.GetAllAsync(page, pageSize);
 
         return _mapper.Map<OperationResult<IEnumerable<ViewUserDto>>>(result);
     }
 
     public async Task<OperationResult<ViewUserDto>> GetIdAsync(string Id)
     {
-        OperationResult<UserModel> result = await _authService.GetIdAsync(Id);
+        OperationResult<UserEntity> result = await _authService.GetIdAsync(Id);
 
         return _mapper.Map<OperationResult<ViewUserDto>>(result);
     }
 
     public async Task<OperationResult<string>> LoginAsync(LoginDto userLogin)
     {
-        UserModel LoginDto = _mapper.Map<UserModel>(userLogin);
+        UserEntity LoginDto = _mapper.Map<UserEntity>(userLogin);
 
         return await _authService.LoginAsync(LoginDto);
     }
     public async Task<OperationResult<CreateUserDto>> CreateAsync(CreateUserDto createUserDto)
     {
-        UserModel UserCreated = _mapper.Map<UserModel>(createUserDto);
+        UserEntity UserCreated = _mapper.Map<UserEntity>(createUserDto);
 
-        OperationResult<UserModel> result = await _authService.CreateAsync(UserCreated);
+        OperationResult<UserEntity> result = await _authService.CreateAsync(UserCreated);
 
         return _mapper.Map<OperationResult<CreateUserDto>>(result);
     }
@@ -50,16 +50,16 @@ public class AuthAppService : IAuthAppService
 
     public async Task<OperationResult<ViewUserDto>> RemoveAsync(string Id)
     {
-        OperationResult<UserModel> result = await _authService.RemoveAsync(Id);
+        OperationResult<UserEntity> result = await _authService.RemoveAsync(Id);
 
         return _mapper.Map<OperationResult<ViewUserDto>>(result);
     }
 
     public async Task<OperationResult<ViewUserDto>> UpdateAsync(string Id, UpdateUserDto updateUserDto)
     {
-        UserModel updateUserModel = _mapper.Map<UserModel>(updateUserDto);
+        UserEntity updateUserModel = _mapper.Map<UserEntity>(updateUserDto);
 
-        OperationResult<UserModel> result = await _authService.UpdateAsync(Id, updateUserModel);
+        OperationResult<UserEntity> result = await _authService.UpdateAsync(Id, updateUserModel);
 
         return _mapper.Map<OperationResult<ViewUserDto>>(result);
     }

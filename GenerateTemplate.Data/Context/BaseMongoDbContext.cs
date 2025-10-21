@@ -6,12 +6,12 @@ using System.Diagnostics.CodeAnalysis;
 namespace GenerateTemplate.Infra.Data.Context;
 
 [ExcludeFromCodeCoverage]
-public abstract class BaseContext<T> where T : IEntity<string>
+public abstract class BaseMongoDbContext<T> where T : IEntity<string>
 {
     protected readonly IMongoCollection<T> Collection;
 
     //Criação do Schema de forma generica
-    protected BaseContext(IOptions<DatabaseSettings> options, string collectionName)
+    protected BaseMongoDbContext(IOptions<DatabaseSettings> options, string collectionName)
     {
         var client = new MongoClient(options.Value.ConnectionString);
         var database = client.GetDatabase(options.Value.DatabaseName);

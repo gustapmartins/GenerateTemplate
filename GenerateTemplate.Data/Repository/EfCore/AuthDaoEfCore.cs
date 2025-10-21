@@ -7,16 +7,16 @@ using MongoDB.Driver;
 
 namespace GenerateTemplate.Infra.Data.Repository.EfCore;
 
-public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
+public class AuthDaoEfCore : BaseMongoDbContext<UserEntity>, IAuthDao
 {
-    private readonly IMongoCollection<UserModel> _AuthCollection;
+    private readonly IMongoCollection<UserEntity> _AuthCollection;
 
     public AuthDaoEfCore(IOptions<DatabaseSettings> options) : base(options, "AuthCollection")
     {
         _AuthCollection = Collection;
     }
 
-    public async Task<UserModel> FindEmailAsync(string Email)
+    public async Task<UserEntity> FindEmailAsync(string Email)
     {
         return await _AuthCollection.Find(x => x.Email == Email).FirstOrDefaultAsync();
     }

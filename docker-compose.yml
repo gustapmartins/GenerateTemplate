@@ -1,9 +1,9 @@
 services:
-  generatetemplate.application:
+  generatetempla_application:
     image: ${DOCKER_REGISTRY-}generatetemplateapplication
     build:
       context: .
-      dockerfile: GenerateTemplate.Application/Dockerfile
+      dockerfile: Dockerfile
     container_name: generatetempla_application
     restart: always
     depends_on:
@@ -12,9 +12,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Database__ConnectionString=mongodb://mongodb_container:27017 
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://+:8080
+      - EnableSwaggerSupport=true
+      - Redis__ConnectionString=redis:6379
     ports:
-      - "8080:80"
+      - "8080:8080"
     networks:
       - app_network
       
@@ -23,7 +25,7 @@ services:
     restart: always
     container_name: mongodb_container
     ports:
-      - "27017:27017"
+      - "27017:27017" # Changed the host port to 27018
     networks:
       - app_network
       
@@ -31,7 +33,7 @@ services:
     image: redis:latest
     container_name: redis
     ports:
-      - "6379:6379"
+      - "6379:6379" # Changed the host port to 6380
     command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
     restart: always
     networks:
