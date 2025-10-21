@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace GenerateTemplate.Infra.Data.Repository.EfCore;
 
-public class GenerateTemplateEfCore : BaseContext<GenerateTemplateEntity>, IGenerateTemplateDao
+public class GenerateTemplateEfCore : BaseMongoDbContext<GenerateTemplateEntity>, IGenerateTemplateDao
 {
     private readonly IMongoCollection<GenerateTemplateEntity> _AuthCollection;
 

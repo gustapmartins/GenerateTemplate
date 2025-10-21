@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace GenerateTemplate.Infra.Data.Repository.EfCore;
 
-public class AuthDaoEfCore : BaseContext<UserEntity>, IAuthDao
+public class AuthDaoEfCore : BaseMongoDbContext<UserEntity>, IAuthDao
 {
     private readonly IMongoCollection<UserEntity> _AuthCollection;
 
