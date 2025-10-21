@@ -73,7 +73,7 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Build Docker Image
-        run: docker build --tag GenerateTemplate/application:latest -f GenerateTemplate.Application/Dockerfile .
+        run: docker build --tag GenerateTemplate/application:latest -f Dockerfile .
         env:
           DOCKER_BUILDKIT: 1
 
